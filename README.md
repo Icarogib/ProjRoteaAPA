@@ -2,16 +2,27 @@
 Projeto para a disciplina de APA
 
 grafo G = (V,A)
+
 V -> vertices
+
 A -> arcos (i,j)
+
 cij -> custo caminho
+
 i -> cliente
+
 di -> demanda por cliente
+
 k -> veiculos
+
 Q -> capacidade veiculos
+
 r -> custo veiculo
+
 pi -> valor de terceirizacao de entrega
+
 L -> ao menos L entregas nao terceirizadas
+
 
 
 iniciar no vertice 0, 
