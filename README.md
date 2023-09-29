@@ -1,11 +1,22 @@
 # ProjRoteaAPA
 Projeto para a disciplina de APA
 
+prazo: 29/10/23
+
+Sprints (4):
+
+1 -> Euristica de construcao (ao menos 1) 
+1 (1 ao menos)/ 2 (o resto) -> Estrutura de vizinhança (ao menos 3)
+1 -> CRUD
+2/3 -> VND
+3 -> Meta-heuristica (ILS ou GRASP)
+3/4 -> Saídas (tabela etc)
+
+? -> Makefile
+
+
+Variáveis:
 grafo G = (V,A)
-
-V -> vertices
-
-A -> arcos (i,j)
 
 cij -> custo caminho
 
@@ -16,6 +27,10 @@ di -> demanda por cliente
 k -> veiculos
 
 Q -> capacidade veiculos
+V -> vertices
+
+A -> arcos (i,j)
+
 
 r -> custo veiculo
 
