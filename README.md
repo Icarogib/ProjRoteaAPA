@@ -24,6 +24,8 @@ Sprints (4):
 Variáveis:
 grafo G = (V,A)
 
+n -> numero de pontos para a entrega
+
 cij -> custo caminho
 
 i -> cliente
