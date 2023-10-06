@@ -3,15 +3,15 @@
 using namespace std;
 
 int main (){	
-    int valorOpcao, sair = 0, voltar = 0, tipo;
-    string e;
+    //int valorOpcao, sair = 0, voltar = 0, tipo;
+    //string e;
   
     ReadaOut infos;
     
-    infos.ler();
+    infos.lerValor();
 
 
-  	infos.salva();
+  	//infos.salva();
     
 	return 0;
 }

@@ -2,13 +2,14 @@
 CC = g++
 CFLAGS = -Wall -g
 
-main: main.o Produto.o #CRUD.o
-	$(CC) $(CFLAGS) -o main main.o Produto.o #CRUD.o
+main: main.o ReadaOut.o 
+	$(CC) $(CFLAGS) -o main main.o ReadaOut.o #CRUD.o
 
-main.o: main.cpp Produto.h #CRUD.h
+main.o: main.cpp ReadaOut.o #CRUD.h
 	$(CC) $(CFLAGS) -c main.cpp
  
 Produto.o: Produto.h
+ReadaOut.o: ReadaOut.h
  
 #CRUD.o: CRUD.h Point.h
 

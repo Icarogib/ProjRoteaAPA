@@ -4,57 +4,36 @@ ReadaOut::ReadaOut () {
     //inicializacao
 }
 
-void ReadaOut::setDemanda ( int d ){
+void ReadaOut::lerValor () { //retira do arquivo e coloca na memoria (qnd programa abre)
+	
+    std::fstream fp;
+    fp.open("n10k5_B.txt", std::fstream::in);
+    
 
-}
+    if (!fp.is_open()) {
+        std::cout << "erro ao abrir o arquivo para ler\n";
+        return;
+    }
 
-void ReadaOut::setVeiculos ( int k ){
+    while (!fp.eof()) {
+        
+        // getline(fp, demanda);
+        // fp.ignore(); //caso precise, colocar antes de um getline
 
-}
+        fp >> entregas;
+        fp >> veiculos;
+		fp >> capacidade;
+        fp >> limiteMinEnt;
+		fp >> custoVeiculo;
 
-void ReadaOut::setCapacidade ( int Q ){
+        //for
+        // fp >> demanda; //array
+        // fp >> custoTerc; //array
+        fp.ignore();        
+    }
+    
+    fp.close();
 
-}
-
-void ReadaOut::setCustoVeiculo ( int r ){
-
-}
-
-void ReadaOut::setTerc ( int p ){
-
-}
-
-void ReadaOut::setLimiteMinEnt ( int L ){
-
-}
-
-void ReadaOut::lerValor () {
-
-}
-
-//int ReadaOut::clientes ( int n ) {
-
-//}
-
-int ReadaOut::demanda ( int d ) {
-
-}
-
-int ReadaOut::veiculos ( int k ) {
-
-}
-
-int ReadaOut::capacidade ( int Q ){
-
-}
-int ReadaOut::custoVeiculo ( int r ) {
-
-}
-
-int ReadaOut::custoTerc ( int p ) {
-
-}
-
-int ReadaOut::limiteMinEnt ( int L ) { //limite minimo de entregas antes de tercerizar
-
+    std::cout << "entregas: " << entregas << "\nVeiculos: " << veiculos << "\nCapacidade: "
+    << capacidade << "\nLimiteMinEntregas: " << limiteMinEnt << "\nCustoVeiculo: " << custoVeiculo << "\n";
 }
