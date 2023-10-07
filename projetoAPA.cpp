@@ -1,6 +1,5 @@
-#include <iostream>
+#include "ReadaOut.h"
 #include <list>
-#include <vector>
 #include <string>
 #include <limits>
 
@@ -102,5 +101,8 @@ int Guloso()
 
 int main(void)
 {
+    //ReadaOut infos;
+    //infos.lerValor(); //leitura do arquivo
+
     Guloso();
 }
