@@ -8,7 +8,6 @@ main: main.o ReadaOut.o
 main.o: main.cpp ReadaOut.o 
 	$(CC) $(CFLAGS) -c main.cpp
  
-Produto.o: Produto.h
 ReadaOut.o: ReadaOut.h
 
 clean:
