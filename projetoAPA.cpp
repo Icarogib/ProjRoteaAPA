@@ -1,38 +1,30 @@
-#include "ReadaOut.h"
-#include <list>
-#include <string>
+#include <iostream>
+#include <vector>
 #include <limits>
 
 using namespace std;
 
-typedef struct
+struct Vertice
 {
     bool jaExec = false;
-    int veiculo_armazenado = -1; // SE O VEICULO FOR 0 SIGNIFICA QUE ELE VAI SER TERCERIZADO
-
-    int menor_custo = std::numeric_limits<int>::max();
+    int menorCusto = std::numeric_limits<int>::max();
+    int numVizinho = -1;
     int demanda;
-    int num_vizinho;
+};
 
-} Vertices;
-
-typedef struct
+struct Caminhao
 {
     int pos = 0;
-    std::vector<int> vertices_armazenados = {};
-    int peso = 10;
+    std::vector<int> verticesArmazenados = {};
+    int peso = 0;
+};
 
-} caminhao;
+int numeroDePontos = 6;   // (esse é o n)
+int numeroDeVeiculos = 2; // k
+int capacidade = 10;      // Q
 
-int numero_de_pontos = 6;   // (esse Ã© o n)
-int numero_de_veiculos = 2; // k
-int capacidade = 10;        // Q
-
-std::vector<int> demanda_por_veiculo = {0, 3, 6, 2, 4, 1, 4}; // d
-std::vector<int> custo_tercerizacao = {5, 2, 4, 4, 5, 3};     // Pi
-
-int custo_veiculo = 5;   // R
-int num_estregas_NT = 3; // L
+std::vector<int> demandaPorVeiculo = {0, 3, 6, 2, 4, 1, 4}; // d
+std::vector<int> custoTercerizacao = {5, 2, 4, 4, 5, 3};    // Pi
 
 int matriz[7][7] = {
     {0, 2, 3, 4, 1, 9, 6},     // VERTICE 0
@@ -43,66 +35,64 @@ int matriz[7][7] = {
     {2, 8, 11, 2, 3, 0, 8},    // VERTICE 5
     {7, 10, 7, 10, 15, 8, 0}}; // VERTICE 6
 
-int Guloso()
+void Guloso()
 {
+    std::vector<Vertice> verticesAUX(numeroDePontos + 1);
+    std::vector<Caminhao> caminhaoAUX(numeroDeVeiculos);
+    std::vector<std::vector<bool>> verticeVisitado(numeroDeVeiculos, std::vector<bool>(numeroDePontos + 1, false));
+    std::vector<int> demandaCaminhao(numeroDeVeiculos, 0);
 
-    std::vector<Vertices> verticesAUX;
-
-    for (int i = 0; i <= numero_de_pontos; i++)
+    for (int i = 0; i <= numeroDePontos; i++)
     {
-        Vertices Pontos;
-        verticesAUX.push_back(Pontos);
-        Pontos.demanda = demanda_por_veiculo[i + 1];
-       // cout << verticesAUX[i].demanda << endl;
+        verticesAUX[i].demanda = demandaPorVeiculo[i];
     }
 
-    std::vector<caminhao> caminhaoAUX;
-
-    for (int index = 0; index < numero_de_veiculos; index++)
+    for (int k = 0; k < numeroDeVeiculos; k++)
     {
-        caminhao VrumVrum;
-        caminhaoAUX.push_back(VrumVrum);
-    }
-
-    // criando as estruturas de dados auxiliares
-
-    for (int k = 0; k < numero_de_veiculos; k++)
-    {  
-            for (int n = 0; n < numero_de_pontos; n++)
+        for (int n = 0; n < numeroDePontos; n++)
+        {
+            if (!verticesAUX[n].jaExec && caminhaoAUX[k].peso + verticesAUX[n].demanda <= capacidade)
             {
-
-                if ((verticesAUX[n].jaExec == false && caminhaoAUX[k].peso <= 10))
+                for (int i = 1; i <= numeroDePontos; i++)
                 {
-                        
-                    for (int i = 1; i <= numero_de_pontos; i++)
+                    if (!verticesAUX[i].jaExec &&
+                        !verticeVisitado[k][i] &&
+                        caminhaoAUX[k].peso + verticesAUX[i].demanda <= capacidade &&
+                        verticesAUX[n].menorCusto > matriz[caminhaoAUX[k].pos][i] &&
+                        matriz[caminhaoAUX[k].pos][i] > 0)
                     {
-                        if ((caminhaoAUX[k].peso - verticesAUX[i].demanda >= 0) && (verticesAUX[n].menor_custo > matriz[caminhaoAUX[k].pos][i]) && (matriz[caminhaoAUX[k].pos][i] > 0))
-                        {
-
-                            verticesAUX[n].menor_custo = matriz[caminhaoAUX[k].pos][i];
-                            verticesAUX[n].num_vizinho = i;
-                            caminhaoAUX[k].pos = verticesAUX[n].num_vizinho;
-
-                        }
+                        verticesAUX[n].menorCusto = matriz[caminhaoAUX[k].pos][i];
+                        verticesAUX[n].numVizinho = i;
                     }
-                    verticesAUX[n].jaExec == true;
-                    caminhaoAUX[k].peso += verticesAUX[n].demanda;
-                    caminhaoAUX[k].vertices_armazenados.push_back(verticesAUX[n].num_vizinho);
-
-                    
-
                 }
+
+                if (verticesAUX[n].numVizinho != -1)
+                {
+                    verticesAUX[n].jaExec = true;
+                    caminhaoAUX[k].peso += verticesAUX[n].demanda;
+                    caminhaoAUX[k].verticesArmazenados.push_back(verticesAUX[n].numVizinho);
+                    verticeVisitado[k][verticesAUX[n].numVizinho] = true;
+                    caminhaoAUX[k].pos = verticesAUX[n].numVizinho;
+                    demandaCaminhao[k] += verticesAUX[n].demanda;
+                }
+            }
         }
+    }
+
+    // Imprimir resultados
+    for (int k = 0; k < numeroDeVeiculos; k++)
+    {
+        cout << "Caminhao " << k + 1 << ": ";
+        for (int i : caminhaoAUX[k].verticesArmazenados)
+        {
+            cout << i << " ";
+        }
+        cout << " - Demanda: " << demandaCaminhao[k] << endl;
     }
 }
 
-
-
-
 int main(void)
 {
-    //ReadaOut infos;
-    //infos.lerValor(); //leitura do arquivo
-
     Guloso();
+    return 0;
 }
