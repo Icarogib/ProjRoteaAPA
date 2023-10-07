@@ -4,36 +4,84 @@ ReadaOut::ReadaOut () {
     //inicializacao
 }
 
-void ReadaOut::lerValor () { //retira do arquivo e coloca na memoria (qnd programa abre)
+void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd programa abre)
 	
-    std::fstream fp;
-    fp.open("n10k5_B.txt", std::fstream::in);
+    int i, j;
+    std::ifstream fp("n10k5_B.txt");    //arquivo para abrir
     
 
-    if (!fp.is_open()) {
+    if (!fp.is_open()) {    // verificacao de erro ao abrir arquivo
         std::cout << "erro ao abrir o arquivo para ler\n";
         return;
     }
 
-    while (!fp.eof()) {
+    while (!fp.eof()) { // vai ate o final do arquivo
         
-        // getline(fp, demanda);
-        // fp.ignore(); //caso precise, colocar antes de um getline
-
         fp >> entregas;
         fp >> veiculos;
 		fp >> capacidade;
         fp >> limiteMinEnt;
 		fp >> custoVeiculo;
 
-        //for
-        // fp >> demanda; //array
-        // fp >> custoTerc; //array
-        fp.ignore();        
+        int tmp; //temporario para pegar o valor do arquivo int
+        
+        for ( i = 0 ; i < entregas - 1 ; i++ ){
+            fp >> tmp;  // manda do arquivo para temporario
+            demanda.push_back(tmp); // manda para o vector demanda | acessado por demanda[i]
+        }
+        
+
+        for ( i = 0 ; i < entregas - 1 ; i++ ){
+            fp >> tmp;
+            custoTerc.push_back(tmp); // manda para o vector custo da Terceirizacao | acessado por demanda[i]
+        }
+
+
+        for ( i = 0 ; i < entregas ; i++ ){ // percorre a linha i da matriz
+            
+            std::vector<int> linhaTemp; // faz um vector temporario para cada linha
+
+            for ( j = 0 ; j < entregas ; j++ ){ // percorre a coluna j da matriz
+                fp >> tmp;
+                linhaTemp.push_back(tmp);   // coloca valor por valor dentro de nossa linha
+
+                //std::cout << "MatrizCustoDentro[" << j << "] = " << linhaTemp[j] << std::endl; //debug linha
+            }
+            custoij.push_back(linhaTemp); // envia a linha i com colunas j para nossa matriz
+        }
+
+        fp.ignore();  
     }
+    
     
     fp.close();
 
+    //debug dados iniciais
+    /*
     std::cout << "entregas: " << entregas << "\nVeiculos: " << veiculos << "\nCapacidade: "
     << capacidade << "\nLimiteMinEntregas: " << limiteMinEnt << "\nCustoVeiculo: " << custoVeiculo << "\n";
+    */
+
+    //debug array (vector) demandas por ponto -1
+    /*
+    for ( i = 0; i < entregas - 1 ; i++ ){
+            std::cout << "demanda [" << i << "] = " << demanda[i] << std::endl;
+    }
+    */
+
+    //debug array (vector) custo da tercerizacao
+    /*
+    for ( i = 0; i < entregas - 1 ; i++ ){
+            std::cout << "custoTerc [" << i << "] = " << custoTerc[i] << std::endl;
+    }
+    */
+
+    //debug array (vector) custo da tercerizacao
+    /*
+    for ( i = 0; i < entregas; i++ ){
+        for ( j = 0; j < entregas; j++ ){
+            std::cout << "MatrizCusto [" << i << "] [" << j << "] = " << custoij[i][j] << std::endl;
+        }
+    }
+    */
 }
