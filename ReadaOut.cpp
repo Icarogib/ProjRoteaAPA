@@ -1,6 +1,5 @@
 #include "ReadaOut.h"
 
-using namespace std;
 
 ReadaOut::ReadaOut () {
     //inicializacao
@@ -9,7 +8,6 @@ ReadaOut::ReadaOut () {
 void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd programa abre)
 	
     int i, j;
-    int rodou = 1;
     maiorCusto = 0;
     std::ifstream fp("n10k5_B.txt");    //arquivo para abrir
     
@@ -21,10 +19,6 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
 
     
     while (!fp.eof()) { // vai ate o final do arquivo
-        if (rodou == 0)
-            break;
-        rodou = 0;
-        //cout << "rodou" << endl;
         fp >> entregas;
         fp >> veiculos;
 		fp >> capacidade;
@@ -61,40 +55,42 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
                 //std::cout << "MatrizCustoDentro[" << j << "] = " << linhaTemp[j] << std::endl; //debug linha
             }
             custoij.push_back(linhaTemp); // envia a linha i com colunas j para nossa matriz
+
         }
 
         fp.ignore();  
+        break;
     }
     
     
     fp.close();
 
-    //debug dados iniciais
-    /*
-    std::cout << "entregas: " << entregas << "\nVeiculos: " << veiculos << "\nCapacidade: "
-    << capacidade << "\nLimiteMinEntregas: " << limiteMinEnt << "\nCustoVeiculo: " << custoVeiculo << "\n";
-    */
+    // //debug dados iniciais
+    
+    // std::cout << "entregas: " << entregas << "\nVeiculos: " << veiculos << "\nCapacidade: "
+    // << capacidade << "\nLimiteMinEntregas: " << limiteMinEnt << "\nCustoVeiculo: " << custoVeiculo << "\n";
+    
 
-    //debug array (vector) demandas por ponto -1
-    /*
-    for ( i = 0; i < entregas - 1 ; i++ ){
-            std::cout << "demanda [" << i << "] = " << demanda[i] << std::endl;
-    }
-    */
+    // //deug array (vector) demandas por ponto -1
+    
+    // for ( i = 0; i < entregas - 1 ; i++ ){
+    //         std::cout << "demanda [" << i << "] = " << demanda[i] << std::endl;
+    // }
+    
 
-    //debug array (vector) custo da tercerizacao
-    /*
-    for ( i = 0; i < entregas - 1 ; i++ ){
-            std::cout << "custoTerc [" << i << "] = " << custoTerc[i] << std::endl;
-    }
-    */
+    // //debug array (vector) custo da tercerizacao
+    
+    // for ( i = 0; i < entregas - 1 ; i++ ){
+    //         std::cout << "custoTerc [" << i << "] = " << custoTerc[i] << std::endl;
+    // }
+    
 
-    //debug array (vector) custo da tercerizacao
-    /*
-    for ( i = 0; i < entregas; i++ ){
-        for ( j = 0; j < entregas; j++ ){
-            std::cout << "MatrizCusto [" << i << "] [" << j << "] = " << custoij[i][j] << std::endl;
-        }
-    }
-    */
+    // //debug array (vector) custo da tercerizacao
+    
+    // for ( i = 0; i < custoij.size() ; i++ ){
+    //     for ( j = 0; j < custoij.size(); j++ ){
+    //         std::cout << "MatrizCusto [" << i << "] [" << j << "] = " << custoij[i][j] << std::endl;
+    //     }
+    // }
+    
 }

@@ -10,7 +10,9 @@ int main (){
 
     atual = custoAtual = 0;
 
+   
     //cout << "Maior Custo: " << menorcusto << endl;
+    
     
     //for (vic = 0; vic < infos.veiculos; vic++){
         
@@ -34,6 +36,7 @@ int main (){
         cout << "menorcusto: " << menorcusto << "\ncaminhoprox: " << caminhoProx << endl ;
     
     }while(i++ != 20);
+
 
     
     
