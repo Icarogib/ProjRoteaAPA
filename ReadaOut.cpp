@@ -1,93 +1,87 @@
 #include "ReadaOut.h"
 
 ReadaOut::ReadaOut () {
-        int entregas = 0;   // numero de entregas
-        int veiculos = 0;   // n de veiculos disponiveis
-        int capacidade = 0; // capacidade de cada veiculo
-        int limiteMinEnt = 0; // limite minimo de entregas antes de tercerizar
-        int custoVeiculo = 0; // preco por usar um veiculo
-        
+    //inicializacao
 }
 
-void ReadaOut::lerValor () { //retira do arquivo e coloca na memoria (qnd programa abre)
+void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd programa abre)
 	
-    int i, j, tmpEntregas, tmpVeiculos, tmpCapacidade, tmpLimiteMinEnt, tmpCustoVeiculo;
-    //std::vector<int> demanda, custoTerc;
-    std::ifstream fp("n10k5_B.txt");
+    int i, j;
+    std::ifstream fp("n10k5_B.txt");    //arquivo para abrir
     
 
-    if (!fp.is_open()) {
+    if (!fp.is_open()) {    // verificacao de erro ao abrir arquivo
         std::cout << "erro ao abrir o arquivo para ler\n";
         return;
     }
 
-    while (!fp.eof()) {
+    while (!fp.eof()) { // vai ate o final do arquivo
         
-        // getline(fp, demanda);
-        // fp.ignore(); //caso precise, colocar antes de um getline
+        fp >> entregas;
+        fp >> veiculos;
+		fp >> capacidade;
+        fp >> limiteMinEnt;
+		fp >> custoVeiculo;
 
-        fp >> tmpEntregas;
-        fp >> tmpVeiculos;
-		fp >> tmpCapacidade;
-        fp >> tmpLimiteMinEnt;
-		fp >> tmpCustoVeiculo;
-
-        int tmp;
-        for ( i = 0; i < tmpEntregas-1; i++ ){
-            fp >> tmp;
-            demanda.push_back(tmp);
+        int tmp; //temporario para pegar o valor do arquivo int
+        
+        for ( i = 0 ; i < entregas - 1 ; i++ ){
+            fp >> tmp;  // manda do arquivo para temporario
+            demanda.push_back(tmp); // manda para o vector demanda | acessado por demanda[i]
         }
         
-        for ( i = 0; i < tmpEntregas-1; i++ ){
+
+        for ( i = 0 ; i < entregas - 1 ; i++ ){
             fp >> tmp;
-            custoTerc.push_back(tmp);
+            custoTerc.push_back(tmp); // manda para o vector custo da Terceirizacao | acessado por demanda[i]
         }
 
-        std::vector<int> matrizTemp;
-    
-        int coluna, linha, arraytemp[tmpEntregas][tmpEntregas];
-        coluna = tmpEntregas;
-        linha = tmpEntregas;
-        std::cout << "ent: " << tmpEntregas << std::endl << "\nlinha: " << linha << "\nent: " << coluna << std::endl;
-        // for ( i = 0; i < tmpEntregas; i++ ){
-        //     for ( j = 0; i < tmpEntregas; j++ ){
-        //         fp >> tmp;
-        //         arraytemp[i][j] = tmp;
-        //         //matrizTemp.push_back(tmp);
-        //     }
-        //     //custoij.push_back(matrizTemp);
-        // }
-    // for ( i = 0; i < tmpEntregas; i++ ){
-    //     for ( j = 0; i < tmpEntregas; j++ ){
-    //         std::cout << "MatrizCusto [" << i << "] [ " << j << " = " << arraytemp[i][j] << std::endl;
-    //     }
-    // }
+
+        for ( i = 0 ; i < entregas ; i++ ){ // percorre a linha i da matriz
+            
+            std::vector<int> linhaTemp; // faz um vector temporario para cada linha
+
+            for ( j = 0 ; j < entregas ; j++ ){ // percorre a coluna j da matriz
+                fp >> tmp;
+                linhaTemp.push_back(tmp);   // coloca valor por valor dentro de nossa linha
+
+                //std::cout << "MatrizCustoDentro[" << j << "] = " << linhaTemp[j] << std::endl; //debug linha
+            }
+            custoij.push_back(linhaTemp); // envia a linha i com colunas j para nossa matriz
+        }
+
         fp.ignore();  
-        std::cout << "tmpEntregas: " << tmpEntregas << "\nVeiculos: " << tmpVeiculos << "\nCapacidade: "
-        << tmpCapacidade << "\nLimiteMinEntregas: " << tmpLimiteMinEnt << "\nCustoVeiculo: " << tmpCustoVeiculo << "\n";
-
-        break;
     }
     
     
     fp.close();
 
     //debug dados iniciais
-    std::cout << "Entregas: " << entregas << "\nVeiculos: " << veiculos << "\nCapacidade: "
+    /*
+    std::cout << "entregas: " << entregas << "\nVeiculos: " << veiculos << "\nCapacidade: "
     << capacidade << "\nLimiteMinEntregas: " << limiteMinEnt << "\nCustoVeiculo: " << custoVeiculo << "\n";
+    */
 
     //debug array (vector) demandas por ponto -1
-    for ( i = 0; i < tmpEntregas - 1 ; i++ ){
+    /*
+    for ( i = 0; i < entregas - 1 ; i++ ){
             std::cout << "demanda [" << i << "] = " << demanda[i] << std::endl;
     }
+    */
+
     //debug array (vector) custo da tercerizacao
-    for ( i = 0; i < tmpEntregas - 1 ; i++ ){
+    /*
+    for ( i = 0; i < entregas - 1 ; i++ ){
             std::cout << "custoTerc [" << i << "] = " << custoTerc[i] << std::endl;
     }
+    */
+
     //debug array (vector) custo da tercerizacao
-    // for ( i = 0; i < tmpEntregas-1; i++ ){
-    //     for ( j = 0; i < tmpEntregas-1; j++ ){
-    //         std::cout << "MatrizCusto [" << i << "] [ " << j << " = " << custoij[i][j] << std::endl;
-    //     }
-    // }
+    /*
+    for ( i = 0; i < entregas; i++ ){
+        for ( j = 0; j < entregas; j++ ){
+            std::cout << "MatrizCusto [" << i << "] [" << j << "] = " << custoij[i][j] << std::endl;
+        }
+    }
+    */
 }
