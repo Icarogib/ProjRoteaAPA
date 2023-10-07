@@ -4,18 +4,23 @@ using namespace std;
 
 int main (){	
     ReadaOut infos;
-    int vic, i, j, caminhoAtual, atual, custoAtual, menorcusto;
+    int vic, i, j, caminhoAtual, atual, custoAtual, menorcusto, caminhoProx;
+    vector<int> passou;
     infos.lerValor();
 
-    //cout << "MatrizCusto [" << i << "] [" << j << "] = " << infos.custoij[i][j] << endl;
     atual = custoAtual = 0;
-	menorcusto = infos.maiorCusto;
 
-    cout << "Maior Custo: " << menorcusto << endl;
+    //cout << "Maior Custo: " << menorcusto << endl;
 
-    for (vic = 0; vic < infos.veiculos; vic++){
+    //for (vic = 0; vic < infos.veiculos; vic++){
         
-        caminhoAtual = 0; // declara q cada veiculo comeca do 0
+    i = caminhoAtual = 0; // declara q cada veiculo comeca do 0
+    do{
+	
+        menorcusto = infos.maiorCusto;  // inicializa que o menor custo eh o maior
+
+        if( i != 0 )
+            caminhoAtual = caminhoProx;
 
         for( j = 0; j < infos.entregas; j++ ){
 
@@ -23,10 +28,13 @@ int main (){
             
             if( custoAtual && custoAtual < menorcusto ){
                 menorcusto = custoAtual;
-                caminhoAtual = j;
+                caminhoProx = j;
             }
         }
-    }
+        cout << "menorcusto: " << menorcusto << "\ncaminhoprox: " << caminhoProx << endl ;
+    
+    }while(i++ != 20);
+
     
     return 0;
 }
