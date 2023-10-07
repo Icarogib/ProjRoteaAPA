@@ -7,6 +7,7 @@ ReadaOut::ReadaOut () {
 void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd programa abre)
 	
     int i, j;
+    maiorCusto = 0;
     std::ifstream fp("n10k5_B.txt");    //arquivo para abrir
     
 
@@ -43,6 +44,10 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
 
             for ( j = 0 ; j < entregas ; j++ ){ // percorre a coluna j da matriz
                 fp >> tmp;
+                
+                if( tmp > maiorCusto ) //maior custo 
+                    maiorCusto = tmp;
+
                 linhaTemp.push_back(tmp);   // coloca valor por valor dentro de nossa linha
 
                 //std::cout << "MatrizCustoDentro[" << j << "] = " << linhaTemp[j] << std::endl; //debug linha
