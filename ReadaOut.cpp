@@ -1,5 +1,7 @@
 #include "ReadaOut.h"
 
+using namespace std;
+
 ReadaOut::ReadaOut () {
     //inicializacao
 }
@@ -7,6 +9,7 @@ ReadaOut::ReadaOut () {
 void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd programa abre)
 	
     int i, j;
+    int rodou = 1;
     maiorCusto = 0;
     std::ifstream fp("n10k5_B.txt");    //arquivo para abrir
     
@@ -16,8 +19,12 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
         return;
     }
 
+    
     while (!fp.eof()) { // vai ate o final do arquivo
-        
+        if (rodou == 0)
+            break;
+        rodou = 0;
+        //cout << "rodou" << endl;
         fp >> entregas;
         fp >> veiculos;
 		fp >> capacidade;
@@ -28,6 +35,7 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
         
         for ( i = 0 ; i < entregas - 1 ; i++ ){
             fp >> tmp;  // manda do arquivo para temporario
+            
             demanda.push_back(tmp); // manda para o vector demanda | acessado por demanda[i]
         }
         
