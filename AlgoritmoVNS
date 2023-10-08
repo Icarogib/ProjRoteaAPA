@@ -1,0 +1,155 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <climits>
+#include <random>
+
+using namespace std;
+
+std::random_device rd;
+std::mt19937 g(rd());
+
+struct Cliente
+{
+    int demanda;
+    int custo;
+};
+
+int calcularCustoRota(const vector<int> &rota, const vector<vector<int>> &matrizDistancia)
+{
+    int custo = 0;
+    for (size_t i = 0; i < rota.size() - 1; ++i)
+    {
+        custo += matrizDistancia[rota[i]][rota[i + 1]];
+    }
+    return custo;
+}
+
+bool rotaValida(const vector<int> &rota, const vector<Cliente> &clientes, int capacidade)
+{
+    int demandaTotal = 0;
+    for (int indiceCliente : rota)
+    {
+        demandaTotal += clientes[indiceCliente].demanda;
+        if (demandaTotal > capacidade)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+vector<int> gerarRotaInicial(int numClientes)
+{
+    vector<int> rota(numClientes - 1); // Excluindo o depósito
+    for (int i = 0; i < numClientes - 1; ++i)
+    {
+        rota[i] = i + 2; // Iniciando a partir de 2 (o depósito é 1)
+    }
+    std::shuffle(rota.begin(), rota.end(), g);
+    return rota;
+}
+
+vector<int> buscaVariavelDeVizinhanca(const vector<Cliente> &clientes, const vector<vector<int>> &matrizDistancia,
+                                      int numVeiculos, int capacidade, int minEntregasNaoTerminadas, int custoVeiculo)
+{
+    int numClientes = clientes.size();
+    vector<int> melhorSolucao(numClientes - 1); // Excluindo o depósito
+    for (int i = 0; i < numClientes - 1; ++i)
+    {
+        melhorSolucao[i] = i + 2; // Atribuindo clientes a rotas, excluindo o depósito
+    }
+    int melhorCusto = INT_MAX;
+
+    int vizinhanca = 1;
+    int maxVizinhanca = 3;
+
+    while (vizinhanca <= maxVizinhanca)
+    {
+        vector<int> solucaoAtual = gerarRotaInicial(numClientes - 1);
+        solucaoAtual.insert(solucaoAtual.begin(), 1); // Inserir depósito no início da rota
+        int custoAtual = calcularCustoRota(solucaoAtual, matrizDistancia);
+        int entregasNaoTerminadas = count_if(solucaoAtual.begin(), solucaoAtual.end(),
+                                             [&minEntregasNaoTerminadas](int indiceCliente)
+                                             {
+                                                 return indiceCliente >= minEntregasNaoTerminadas;
+                                             });
+
+        while (entregasNaoTerminadas < minEntregasNaoTerminadas || !rotaValida(solucaoAtual, clientes, capacidade))
+        {
+            solucaoAtual = gerarRotaInicial(numClientes - 1);
+            solucaoAtual.insert(solucaoAtual.begin(), 1);
+            entregasNaoTerminadas = count_if(solucaoAtual.begin(), solucaoAtual.end(),
+                                             [&minEntregasNaoTerminadas](int indiceCliente)
+                                             {
+                                                 return indiceCliente >= minEntregasNaoTerminadas;
+                                             });
+        }
+
+        if (entregasNaoTerminadas >= minEntregasNaoTerminadas && rotaValida(solucaoAtual, clientes, capacidade))
+        {
+            int custoRotaAtual = calcularCustoRota(solucaoAtual, matrizDistancia);
+            custoRotaAtual += entregasNaoTerminadas * custoVeiculo;
+            if (custoRotaAtual < custoAtual)
+            {
+                custoAtual = custoRotaAtual;
+                vizinhanca = 1;
+                if (custoAtual < melhorCusto)
+                {
+                    melhorCusto = custoAtual;
+                    melhorSolucao = solucaoAtual;
+                }
+            }
+        }
+
+        if (vizinhanca < maxVizinhanca)
+        {
+            ++vizinhanca;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    return melhorSolucao;
+}
+
+int main()
+{
+    int numClientes, numVeiculos, capacidade, minEntregasNaoTerminadas, custoVeiculo;
+
+    // Código para ler a entrada do usuário ou de um arquivo
+
+    vector<Cliente> clientes(numClientes);
+    // Código para ler as demandas dos clientes
+
+    vector<int> custoTerceirizado(numClientes);
+    // Código para ler os custos terceirizados
+
+    vector<vector<int>> matrizDistancia(numClientes, vector<int>(numClientes));
+    // Código para ler a matriz de distância entre os clientes
+
+    // Código para chamar a função de busca e imprimir a solução
+    vector<int> solucao = buscaVariavelDeVizinhanca(clientes, matrizDistancia, numVeiculos, capacidade,
+                                                    minEntregasNaoTerminadas, custoVeiculo);
+
+    cout << "Melhor solução encontrada: ";
+    for (int indiceCliente : solucao)
+    {
+        cout << indiceCliente << " ";
+    }
+    cout << endl;
+
+    int custoTotal = calcularCustoRota(solucao, matrizDistancia);
+    int entregasNaoTerminadas = count_if(solucao.begin(), solucao.end(),
+                                         [&minEntregasNaoTerminadas](int indiceCliente)
+                                         {
+                                             return indiceCliente >= minEntregasNaoTerminadas;
+                                         });
+    custoTotal += entregasNaoTerminadas * custoVeiculo;
+    cout << "Custo total da rota: " << custoTotal << endl;
+
+    return 0;
+}
