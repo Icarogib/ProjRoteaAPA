@@ -1,13 +1,15 @@
 #include "ReadaOut.h"
 
+bool debugRead = false;
+
 ReadaOut::ReadaOut () {
     //inicializacao
 }
 
 void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd programa abre)
-	
     int i, j;
-    maiorCusto = 0;
+
+    maiorCusto = maiorDemanda = 0;
     std::ifstream fp("n10k5_B.txt");    //arquivo para abrir
     
 
@@ -16,8 +18,8 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
         return;
     }
 
+    
     while (!fp.eof()) { // vai ate o final do arquivo
-        
         fp >> entregas;
         fp >> veiculos;
 		fp >> capacidade;
@@ -25,16 +27,20 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
 		fp >> custoVeiculo;
 
         int tmp; //temporario para pegar o valor do arquivo int
-        
+        int mDemanda = 0;
         for ( i = 0 ; i < entregas - 1 ; i++ ){
             fp >> tmp;  // manda do arquivo para temporario
+            
+            if( tmp > maiorDemanda)
+                maiorDemanda = tmp;
+            
             demanda.push_back(tmp); // manda para o vector demanda | acessado por demanda[i]
         }
         
 
         for ( i = 0 ; i < entregas - 1 ; i++ ){
             fp >> tmp;
-            custoTerc.push_back(tmp); // manda para o vector custo da Terceirizacao | acessado por demanda[i]
+            custoTerc.push_back(tmp); // manda para o vector custo da Terceirizacao | acessado por custoTerc[i]
         }
 
 
@@ -53,40 +59,53 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
                 //std::cout << "MatrizCustoDentro[" << j << "] = " << linhaTemp[j] << std::endl; //debug linha
             }
             custoij.push_back(linhaTemp); // envia a linha i com colunas j para nossa matriz
+
         }
 
         fp.ignore();  
+        break;
     }
     
     
     fp.close();
 
     //debug dados iniciais
-    /*
-    std::cout << "entregas: " << entregas << "\nVeiculos: " << veiculos << "\nCapacidade: "
-    << capacidade << "\nLimiteMinEntregas: " << limiteMinEnt << "\nCustoVeiculo: " << custoVeiculo << "\n";
-    */
-
-    //debug array (vector) demandas por ponto -1
-    /*
-    for ( i = 0; i < entregas - 1 ; i++ ){
-            std::cout << "demanda [" << i << "] = " << demanda[i] << std::endl;
+    if(debugRead){
+        std::cout << "*========================= DebugReadFile =========================*"
+        << "\n\nEntregas: " << entregas << "\n\nVeiculos: " << veiculos << "\n\nCapacidade: "
+        << capacidade << "\n\nLimiteMinEntregas: " << limiteMinEnt << "\n\nCustoVeiculo: " << custoVeiculo << "\n";
     }
-    */
 
-    //debug array (vector) custo da tercerizacao
-    /*
-    for ( i = 0; i < entregas - 1 ; i++ ){
-            std::cout << "custoTerc [" << i << "] = " << custoTerc[i] << std::endl;
-    }
-    */
+    //deug array (vector) demandas por ponto -1
+    if(debugRead){
+        std::cout << "\nDemanda: " << std::endl;
 
-    //debug array (vector) custo da tercerizacao
-    /*
-    for ( i = 0; i < entregas; i++ ){
-        for ( j = 0; j < entregas; j++ ){
-            std::cout << "MatrizCusto [" << i << "] [" << j << "] = " << custoij[i][j] << std::endl;
+        for ( i = 0; i < entregas - 1 ; i++ ){
+                std::cout << "    [" << i+1 << "] = " << demanda[i];
         }
     }
-    */
+
+    //debug array (vector) custo da tercerizacao
+    if(debugRead){
+        std::cout << "\nCustoTerc: " << std::endl;
+
+        for ( i = 0; i < entregas - 1 ; i++ ){
+                std::cout << "    [" << i+1 << "] = " << custoTerc[i];
+        }
+    }
+
+    //debug array (vector) custo da tercerizacao
+    
+    if(debugRead){
+        std::cout << "\n\nMatriz:" << std::endl;
+
+        for (int i = 0; i< custoij.size(); i++){
+            for(int j = 0 ; j< custoij.size(); j++){
+                std::cout << " " << custoij[i][j];
+            }
+            std::cout  << std::endl;
+        }
+        std::cout << "\n*========================= END DebugReadFile =========================*" << std::endl;
+    }
+    
 }
