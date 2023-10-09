@@ -9,10 +9,10 @@ ReadaOut::ReadaOut () {
 void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd programa abre)
     int i, j;
 
-    maiorCusto = maiorDemanda = 0;
+    maiorCusto = menorDemanda = 0;
+    
     std::ifstream fp("n10k5_B.txt");    //arquivo para abrir
     
-
     if (!fp.is_open()) {    // verificacao de erro ao abrir arquivo
         std::cout << "erro ao abrir o arquivo para ler\n";
         return;
@@ -30,10 +30,12 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
         int mDemanda = 0;
         for ( i = 0 ; i < entregas - 1 ; i++ ){
             fp >> tmp;  // manda do arquivo para temporario
-            
-            if( tmp > maiorDemanda)
-                maiorDemanda = tmp;
-            
+
+            if( !i )
+                menorDemanda = tmp;
+            if ( menorDemanda > tmp )
+                menorDemanda = tmp;
+
             demanda.push_back(tmp); // manda para o vector demanda | acessado por demanda[i]
         }
         
@@ -83,6 +85,7 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
         for ( i = 0; i < entregas - 1 ; i++ ){
                 std::cout << "    [" << i+1 << "] = " << demanda[i];
         }
+        std::cout << "\nMenor Demanda: " << menorDemanda << std::endl;
     }
 
     //debug array (vector) custo da tercerizacao

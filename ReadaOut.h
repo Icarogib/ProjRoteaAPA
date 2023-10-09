@@ -14,7 +14,7 @@ class ReadaOut {
         int limiteMinEnt; // limite minimo de entregas antes de tercerizar
         int custoVeiculo; // preco por usar um veiculo
         int maiorCusto;   // maior custo
-        int maiorDemanda; // maior demanda
+        int menorDemanda; // menor demanda
 
         std::vector<int> demanda; //"array" de demandas
         std::vector<int> custoTerc; //"array" de tercerizacao
