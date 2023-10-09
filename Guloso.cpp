@@ -7,11 +7,8 @@ using namespace std;
 
 //problemas a resolver:
 
-// FALTA TERCEIRIZACAO
-
-//obs:
-//custo do atual para o proximo, do proximo para o deposito
-//compara com a terceirizacao
+// Organizar e nao deixar passar de 4 camadas.
+// Testar a fundo a terceirizacao, ver se ela deixa alguem com demanda no fim.
 
 int main (){	
     ReadaOut infos;
