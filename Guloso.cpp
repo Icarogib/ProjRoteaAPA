@@ -1,6 +1,7 @@
 #include "Veiculo.h"
 
 bool debugloso = false;
+bool enableTerceirizacao = true;
 
 using namespace std;
 
@@ -15,14 +16,14 @@ using namespace std;
 int main (){	
     ReadaOut infos;
     
-    int vic, caminhoAtual, custoAtual, custoTotal, custoTotalCaminho, custoTotalVeiculo,
-    menorcusto, caminhoProx, cargaTotal, demandaJ, demandaEntregue, menorDemanda;
+    int vic, caminhoAtual, custoAtual, custoTotal, custoTotalCaminho, custoTotalVeiculo, custoTotalTerceirizado,
+    menorcusto, caminhoProx, cargaTotal, demandaJ, demandaEntregue, menorDemanda, custoTerceirizar, entregaVeiculo;
     
     long unsigned int entregasFeitas;
     vector<int> terceirizados;
     
     // inicializando com 0
-    custoTotal = custoTotalVeiculo = custoTotalCaminho = entregasFeitas = 0 ;
+    custoTotal = custoTotalVeiculo = custoTotalCaminho = custoTotalTerceirizado = entregasFeitas = entregaVeiculo  = 0 ;
     
     infos.lerValor();                                                    // recupera valores do arquivo
 
@@ -56,23 +57,39 @@ int main (){
             if(debugloso)
                 cout << "\nVerificando melhor a partir de [" << caminhoAtual << "]:" << endl;
 
-
+            bool terc1 = false;
             // Loop menor custo mais proximo a partir do ponto que foi entregue
-            for( long unsigned int j = 0; j < infos.custoij.size() ; j++ ){     // ponto de partida fixo
+            for( long unsigned int j = 1; j < infos.custoij.size() ; j++ ){     // ponto de partida fixo
                                                                                 // passamos por todas as possibilidades
 
-                            //DEBUGLOSO**
-                if(debugloso)
-                    cout <<" [" << caminhoAtual << "][" << j << "] --->";
-
-
                 custoAtual = infos.custoij[caminhoAtual][j];                    // recupera o custo de ida de um ponto ao outro
+                            //DEBUGLOSO**
                 
-                if (!j) // nao ha demanda para 0
-                    demandaJ = 0;                           
-                else
-                    demandaJ = infos.demanda[j-1];                             // recupera a demanda dos pontos que estao sendo passados    
+
+
+                custoTerceirizar = infos.custoTerc[j-1];
+                demandaJ = infos.demanda[j-1];                             // recupera a demanda dos pontos que estao sendo passados    
                 
+                if(debugloso){
+                    cout <<" [" << caminhoAtual << "][" << j << "] ---> " << custoAtual << endl;
+                    if (!demandaJ)
+                        cout << "^sem demanda" << endl;
+                }
+
+                if(enableTerceirizacao){
+                    if ( caminhoAtual && demandaJ && entregaVeiculo >= infos.limiteMinEnt && custoTerceirizar < (custoAtual + infos.custoij[j][0]) ){
+                        terc1 = true;
+                        custoTotalTerceirizado += custoTerceirizar;
+                        
+                        if (debugloso)
+                            cout << "^terceiriza" << endl;
+                        
+                        terceirizados.push_back(j);
+                        infos.demanda[ j - 1 ] = 0;      // com a carga terceirizada e entregue, zeramos a demanda
+                        demandaJ = 0;
+                        entregasFeitas++;
+                    }
+                }
 
                 if( custoAtual && demandaJ && custoAtual < menorcusto && demandaJ <= veiculo[vic].carga ){  // se possuir custo e demanda, se
                                                                                                             // for menor que o menor custo 
@@ -83,7 +100,7 @@ int main (){
             }
             
                             //DEBUGLOSO**
-            if(debugloso){
+            if(debugloso && !terc1 ){
                 cout <<"\n\nMenorCusto [" << caminhoAtual << "][" << caminhoProx << "] com custo: " <<
                 menorcusto << "\nCusto Atual da Viagem: " << veiculo[vic].custoCaminho + menorcusto <<
                 "\nCarga Atual de: " << veiculo[vic].carga << "\nDemanda Entregue: " << demandaEntregue 
@@ -91,21 +108,43 @@ int main (){
                 cout << "\nCARGA ENTREGUE EM: " << caminhoProx << "\nRemovendo demanda...." << endl;
             }
 
-            veiculo[vic].custoCaminho += menorcusto;   // colocar veiculo custo do caminho dele
-            veiculo[vic].carga -= demandaEntregue;     // carga entregue, zerar demanda em [caminhoProx]
-            veiculo[vic].rota.push_back(caminhoProx);  // coloca na rota do veiculo
-            infos.demanda[ caminhoProx - 1 ] = 0;      // com a carga entregue, zeramos a demanda
-            infos.custoTerc[ caminhoProx - 1 ] = 0;    // e tambem a terceirizacao, ja que nao eh necessaria
-            entregasFeitas++;                          // soma de entregas no total de todos os veiculos
-
+            if(enableTerceirizacao){
+                if( !terc1 ){
+                    veiculo[vic].custoCaminho += menorcusto;   // colocar veiculo custo do caminho dele
+                    veiculo[vic].carga -= demandaEntregue;     // carga entregue, zerar demanda em [caminhoProx]
+                    veiculo[vic].rota.push_back(caminhoProx);  // coloca na rota do veiculo
+                    infos.demanda[ caminhoProx - 1 ] = 0;      // com a carga entregue, zeramos a demanda
+                    entregasFeitas++;                          // soma de entregas no total de todos os veiculos e terceirizacao
+                }
+            }else{
+                    veiculo[vic].custoCaminho += menorcusto;   // colocar veiculo custo do caminho dele
+                    veiculo[vic].carga -= demandaEntregue;     // carga entregue, zerar demanda em [caminhoProx]
+                    veiculo[vic].rota.push_back(caminhoProx);  // coloca na rota do veiculo
+                    infos.demanda[ caminhoProx - 1 ] = 0;      // com a carga entregue, zeramos a demanda
+                    entregasFeitas++;                          // soma de entregas no total de todos os veiculos e terceirizacao
+            }
+            
+            if(enableTerceirizacao){
+                entregaVeiculo = entregasFeitas - terceirizados.size();
+            }
         }
+
+            
+            veiculo[vic].custoCaminho += infos.custoij[caminhoProx][0];     //custo caminho para voltar        
+            custoTotalCaminho += veiculo[vic].custoCaminho;
+            custoTotalVeiculo += infos.custoVeiculo;
+
+            if(enableTerceirizacao)
+                custoTotal = custoTotalCaminho + custoTotalVeiculo + custoTotalTerceirizado;
+            else
+                custoTotal = custoTotalCaminho + custoTotalVeiculo;
 
                             //DEBUGLOSO**
         if(debugloso){
             cout << "\n\n==================== RELATORIO FINAL DA VIAGEM ======================\n" 
             << "\n***** Retornando *****" << "\nCusto de volta [" 
             << caminhoProx << "][0]: " << infos.custoij[caminhoProx][0] << "\nCusto Total da Viagem: "
-            << veiculo[vic].custoCaminho + infos.custoij[caminhoProx][0] << "\nCarga de retorno de: "
+            << veiculo[vic].custoCaminho << "\nCarga de retorno de: "
             << veiculo[vic].carga << endl;
 
             cout << "\nRota do veiculo: ";
@@ -122,24 +161,25 @@ int main (){
             cout << "\nEntregas Efetuadas: " << entregasFeitas <<
                     "\n\n==================== FIM RELATORIO VIAGEM ======================" << endl;
         }
-        
-        veiculo[vic].custoCaminho += infos.custoij[caminhoProx][0];     //custo caminho para voltar
-        
-        custoTotalCaminho += veiculo[vic].custoCaminho;
-        custoTotalVeiculo += infos.custoVeiculo;
-        //custoTotalTerceirizado += custoTotal;                     // IMPLEMENTAR
-        custoTotal = custoTotalCaminho + custoTotalVeiculo;// + custoTotalTerceirizado;
 
+        // Condicao de Saida
         if( entregasFeitas == (infos.demanda.size()) ){ // se a maior demanda for 0 ou terem entregue todas as demandas 
             break;                                                                              // acabam as entregas
         } 
-
+        
     }
 
     // ========================================= Apresentacao de Resultados ========================================= //
+    if(enableTerceirizacao){
+        cout << custoTotal << "\n" << custoTotalCaminho << "\n" << custoTotalVeiculo << "\n" << custoTotalTerceirizado << "\n" << endl;
+        for( long unsigned int i = 0; i < terceirizados.size(); i++ ){
+            cout <<  terceirizados[i] << " ";
+        }
+    }else
+        cout << custoTotal << "\n" << custoTotalCaminho << "\n" << custoTotalVeiculo;
+    
 
-    cout << custoTotal << "\n" << custoTotalCaminho << "\n" << custoTotalVeiculo << endl; // << custoTotalTerceirizado << //implementar listaterc
-    cout << "\n" << custoTotalVeiculo / infos.custoVeiculo << endl;
+    cout << "\n\n" << custoTotalVeiculo / infos.custoVeiculo << endl;   //quantidade de veiculos utilizados
     for (vic = 0; vic < infos.veiculos; vic++){
 
         if( veiculo[vic].rota.size() ){
@@ -161,23 +201,3 @@ int main (){
 
     return 0;
 }
-
- //terceirizacao para implementar depois!!
-
-/*
-                if ( custoTerceirizar && entregasFeitas >= infos.limiteMinEnt && custoTerceirizar < (custoAtual + infos.custoij[j][0]) && caminhoAtual ){
-                    cout << "terceiriza [" << caminhoAtual << "][" << j << "]" << endl;
-                    terceirizados.push_back(j);
-                    infos.demanda[ j - 1 ] = 0;      // com a carga terceirizada e entregue, zeramos a demanda
-                    infos.custoTerc[ j - 1 ] = 0;    // e tambem a terceirizacao, ja que nao eh mais necessaria
-                    custoTerceirizar = 0;
-                    demandaJ = 0;
-                }
-
-                //terceirizados.size()
-           // if ( !terc2 ){ //alterar
-
-           //custoTerceirizar = infos.custoTerc[j-1];                         // recupera o custo de terceirizacao
-           //custoTerceirizar = 0;
-           //bool terc1 = false; //custoTotalTerceirizado, custoTerceirizar 
-*/
