@@ -1,0 +1,86 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+// Estrutura para representar o grafo
+struct Grafo {
+    int vertices;
+    vector<vector<int>> matrizAdjacencia;
+
+    Grafo(int V) : vertices(V), matrizAdjacencia(V, vector<int>(V, 0)) {}
+};
+
+// Função para calcular o custo da solução atual
+int calcularCusto(const Grafo& grafo, const vector<int>& solucao) {
+    int custo = 0;
+    for (int i = 0; i < grafo.vertices; ++i) {
+        custo += grafo.matrizAdjacencia[i][solucao[i]];
+        custo += grafo.matrizAdjacencia[solucao[i]][i];
+    }
+    return custo;
+}
+
+// Função para realizar a troca de dois vértices na solução
+void trocarVertices(vector<int>& solucao, int i, int j) {
+    swap(solucao[i], solucao[j]);
+}
+
+// Algoritmo VND (Variable Neighborhood Descent)
+bool VND(Grafo& grafo, vector<int>& solucao) {
+    int custoAtual = calcularCusto(grafo, solucao);
+    bool melhorou = true;
+
+    // Loop principal do VND
+    while (melhorou) {
+        melhorou = false;
+
+        // Laço para explorar diferentes vizinhanças (neste caso, todas as trocas de pares de vértices)
+        for (int i = 0; i < grafo.vertices - 1; ++i) {
+            for (int j = i + 1; j < grafo.vertices; ++j) {
+                trocarVertices(solucao, i, j);
+                int novoCusto = calcularCusto(grafo, solucao);
+
+                // Se o novo custo é menor, aceita a troca
+                if (novoCusto < custoAtual) {
+                    custoAtual = novoCusto;
+                    melhorou = true;
+                } else {
+                    // Reverte a troca se não houve melhoria
+                    trocarVertices(solucao, i, j);
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+int main() {
+    // Exemplo de uso
+    int numVertices = 4;
+    Grafo grafo(numVertices);
+
+    // Inicializar a matriz de adjacência
+    // Preencha sua matriz de adjacência aqui...
+
+    // Solução inicial (permutação dos vértices)
+    vector<int> solucao = {0, 1, 2, 3}; 
+
+    cout << "Custo Inicial: " << calcularCusto(grafo, solucao) << endl;
+
+    // Chamada da função VND para otimizar a solução
+    if (VND(grafo, solucao)) {
+        cout << "Solução Otimizada: ";
+        for (int vertice : solucao) {
+            cout << vertice << " ";
+        }
+        cout << endl;
+        cout << "Custo Otimizado: " << calcularCusto(grafo, solucao) << endl;
+    } else {
+        cout << "Falha ao otimizar a solução." << endl;
+    }
+
+    return 0;
+}
