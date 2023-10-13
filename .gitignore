@@ -4,3 +4,5 @@ ReadaOut.o
 Veiculo.o
 testeGuloso.exe
 testeGuloso
+testeThirdparty.exe
+ThirdParty.o
