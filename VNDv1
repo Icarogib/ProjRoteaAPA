@@ -4,83 +4,98 @@
 
 using namespace std;
 
-// Estrutura para representar o grafo
-struct Grafo {
-    int vertices;
-    vector<vector<int>> matrizAdjacencia;
-
-    Grafo(int V) : vertices(V), matrizAdjacencia(V, vector<int>(V, 0)) {}
+struct Veiculo
+{
+    vector<int> rota;
+    int custoCaminho;
 };
 
-// Função para calcular o custo da solução atual
-int calcularCusto(const Grafo& grafo, const vector<int>& solucao) {
+int calcularCustoRota(const vector<int> &rota, const vector<vector<int>> &custoij)
+{
     int custo = 0;
-    for (int i = 0; i < grafo.vertices; ++i) {
-        custo += grafo.matrizAdjacencia[i][solucao[i]];
-        custo += grafo.matrizAdjacencia[solucao[i]][i];
+    for (size_t i = 0; i < rota.size() - 1; ++i)
+    {
+        custo += custoij[rota[i]][rota[i + 1]];
     }
     return custo;
 }
 
-// Função para realizar a troca de dois vértices na solução
-void trocarVertices(vector<int>& solucao, int i, int j) {
-    swap(solucao[i], solucao[j]);
+void imprimirRota(const vector<int> &rota)
+{
+    for (size_t i = 0; i < rota.size(); ++i)
+    {
+        cout << rota[i] << " ";
+    }
+    cout << endl;
 }
 
-// Algoritmo VND (Variable Neighborhood Descent)
-bool VND(Grafo& grafo, vector<int>& solucao) {
-    int custoAtual = calcularCusto(grafo, solucao);
-    bool melhorou = true;
+bool swapMelhoraRota(vector<int> &rota, int i, int j, const vector<vector<int>> &custoij)
+{
+    reverse(rota.begin() + i, rota.begin() + j + 1);
+    int novoCusto = calcularCustoRota(rota, custoij);
+    if (novoCusto < calcularCustoRota(rota, custoij))
+    {
+        return true;
+    }
+    else
+    {
+        reverse(rota.begin() + i, rota.begin() + j + 1); // Desfaz a troca se não houver melhoria
+        return false;
+    }
+}
 
-    // Loop principal do VND
-    while (melhorou) {
-        melhorou = false;
+void VND(vector<int> &rota, const vector<vector<int>> &custoij)
+{
+    int custoAtual = calcularCustoRota(rota, custoij);
+    bool melhoria = true;
 
-        // Laço para explorar diferentes vizinhanças (neste caso, todas as trocas de pares de vértices)
-        for (int i = 0; i < grafo.vertices - 1; ++i) {
-            for (int j = i + 1; j < grafo.vertices; ++j) {
-                trocarVertices(solucao, i, j);
-                int novoCusto = calcularCusto(grafo, solucao);
+    while (melhoria)
+    {
+        melhoria = false;
 
-                // Se o novo custo é menor, aceita a troca
-                if (novoCusto < custoAtual) {
-                    custoAtual = novoCusto;
-                    melhorou = true;
-                } else {
-                    // Reverte a troca se não houve melhoria
-                    trocarVertices(solucao, i, j);
+        for (size_t i = 1; i < rota.size() - 1; ++i)
+        {
+            for (size_t j = i + 1; j < rota.size(); ++j)
+            {
+                if (swapMelhoraRota(rota, i, j, custoij))
+                {
+                    melhoria = true;
+                    cout << "Melhoria encontrada: Troca entre " << rota[i - 1] << " e " << rota[j] << endl;
+                    cout << "Nova rota: ";
+                    imprimirRota(rota);
+                    cout << "Novo custo: " << calcularCustoRota(rota, custoij) << endl;
+                    break; // Sai do loop interno se encontrar uma melhoria
                 }
+            }
+            if (melhoria)
+            {
+                break; // Sai do loop externo se encontrar uma melhoria
             }
         }
     }
-
-    return true;
 }
 
-int main() {
-    // Exemplo de uso
-    int numVertices = 4;
-    Grafo grafo(numVertices);
+int main()
+{
+    // Suponha que você já tem uma rota inicial e uma matriz de custos custoij
+    vector<int> rotaInicial = {0, 1, 2, 3, 4, 0}; // Exemplo de rota inicial
+    vector<vector<int>> custoij = {
+        {0, 10, 15, 20, 25, 30},
+        {10, 0, 35, 25, 30, 40},
+        {15, 35, 0, 30, 35, 45},
+        {20, 25, 30, 0, 40, 50},
+        {25, 30, 35, 40, 0, 55},
+        {30, 40, 45, 50, 55, 0}}; // Exemplo de matriz de custos
 
-    // Inicializar a matriz de adjacência
-    // Preencha sua matriz de adjacência aqui...
+    cout << "Rota inicial: ";
+    imprimirRota(rotaInicial);
+    cout << "Custo inicial: " << calcularCustoRota(rotaInicial, custoij) << endl;
 
-    // Solução inicial (permutação dos vértices)
-    vector<int> solucao = {0, 1, 2, 3}; 
+    VND(rotaInicial, custoij);
 
-    cout << "Custo Inicial: " << calcularCusto(grafo, solucao) << endl;
-
-    // Chamada da função VND para otimizar a solução
-    if (VND(grafo, solucao)) {
-        cout << "Solução Otimizada: ";
-        for (int vertice : solucao) {
-            cout << vertice << " ";
-        }
-        cout << endl;
-        cout << "Custo Otimizado: " << calcularCusto(grafo, solucao) << endl;
-    } else {
-        cout << "Falha ao otimizar a solução." << endl;
-    }
+    cout << "Rota otimizada: ";
+    imprimirRota(rotaInicial);
+    cout << "Custo otimizado: " << calcularCustoRota(rotaInicial, custoij) << endl;
 
     return 0;
 }
