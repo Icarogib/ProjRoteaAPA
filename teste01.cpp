@@ -1,12 +1,11 @@
-#include <iostream>
-#include <vector>
+#include "ReadaOut.h"
 #include <queue>
 #include <climits>
 
 using namespace std;
 
 const int INF = INT_MAX;
-const int Q = 50; // Demanda máxima permitida.
+int Q = 0; // Demanda máxima permitida.
 
 class Grafo
 {
@@ -87,7 +86,7 @@ pair<int, vector<int>> Grafo::primMST()
 
     // Calcula o custo do caminho mínimo.
     int custoTotal = 0;
-    for (int i = 1; i < caminho.size(); i++)
+    for (long unsigned int i = 1; i < caminho.size(); i++)
     {
         custoTotal += grafo[caminho[i - 1]][caminho[i]];
     }
@@ -97,36 +96,28 @@ pair<int, vector<int>> Grafo::primMST()
 
 int main()
 {
-    Grafo g(10);
+    ReadaOut infos;
+    infos.lerValor();
+    infos.demanda.insert(infos.demanda.begin(), 0);
+    
+    Q = infos.capacidade;
 
-    int matriz[10][10] = {
-        {0, 35, 78, 76, 98, 55, 52, 38, 86, 89},
-        {35, 0, 61, 60, 91, 81, 41, 13, 85, 95},
-        {78, 61, 0, 4, 38, 87, 27, 49, 41, 59},
-        {76, 60, 4, 0, 37, 84, 24, 47, 39, 57},
-        {98, 91, 38, 37, 0, 84, 51, 78, 18, 34},
-        {55, 81, 87, 84, 84, 0, 66, 75, 67, 57},
-        {52, 41, 27, 24, 51, 66, 0, 28, 45, 57},
-        {38, 13, 49, 47, 78, 75, 28, 0, 72, 82},
-        {86, 85, 41, 39, 18, 67, 45, 72, 0, 20},
-        {89, 95, 59, 57, 34, 57, 57, 82, 20, 0}};
-
-    int demandas[10] = {0, 19, 21, 6, 19, 7, 12, 16, 6, 16};
+    Grafo g(infos.demanda.size());
 
     // Adicionando arestas e demandas ao grafo.
-    for (int i = 0; i < 10; ++i)
+    for (long unsigned int i = 0; i < infos.demanda.size(); ++i)
     {
-        g.adicionarDemanda(i, demandas[i]);
-        for (int j = i + 1; j < 10; ++j)
+        g.adicionarDemanda(i, infos.demanda[i]);
+        for (long unsigned int j = i + 1; j < infos.demanda.size(); ++j)
         {
-            g.adicionarAresta(i, j, matriz[i][j]);
+            g.adicionarAresta(i, j, infos.custoij[i][j]);
         }
     }
 
     auto resultado = g.primMST();
 
     cout << "Caminho mínimo: ";
-    for (int i = 0; i < resultado.second.size(); i++)
+    for (long unsigned int i = 0; i < resultado.second.size(); i++)
     {
         cout << resultado.second[i] << " ";
     }

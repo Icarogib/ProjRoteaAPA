@@ -1,6 +1,6 @@
 #include "Veiculo.h"
 
-bool debugloso = true;
+bool debugloso = false;
 bool enableTerceirizacao = true;
 
 using namespace std;
