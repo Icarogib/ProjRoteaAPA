@@ -11,6 +11,7 @@ int main(){
     vector<int> somas;
     infos.lerValor();
 
+    cout << "Custos de Terceirizacao: ";
     for(auto& i : infos.custoTerc){ // custo terc
         cout << i << " ";
     }
@@ -36,14 +37,15 @@ int main(){
         menor1 = menor2 = INT_MAX;
     }
 
+    cout << "\nSoma dos dois menores: ";
     for(auto& i : somas){ //soma dos dois menores
         cout << i << " ";
     }
-    cout << endl;
+    cout << "\n" << endl;
 
     for(int i = 0 ; i < infos.custoTerc.size(); i++){
         if (somas[i] > infos.custoTerc[i]){
-            cout << "local [" << i << "] " << "tem o custo de entrada e saida maior que o de terceirizar, portanto pode ser melhor terceiriza-lo" << endl;
+            cout << "local [" << i+1 << "] " << "tem o custo de entrada e saida maior que o de terceirizar, portanto pode ser melhor terceiriza-lo" << endl;
         }
     }
     
