@@ -53,8 +53,8 @@ int main (){
             
 
                             //DEBUGLOSO**
-            if(debugloso)
-                cout << "\nVerificando melhor a partir de [" << caminhoAtual << "]:" << endl;
+            // if(debugloso)
+            //     cout << "\nVerificando melhor a partir de [" << caminhoAtual << "]:" << endl;
 
             bool terc1 = false;
             // Loop menor custo mais proximo a partir do ponto que foi entregue
@@ -70,19 +70,19 @@ int main (){
                 demandaJ = infos.demanda[j-1];                             
                 
                             //DEBUGLOSO**
-                if(debugloso){
-                    cout <<" [" << caminhoAtual << "][" << j << "] ---> " << custoAtual << endl;
-                    if (!demandaJ)
-                        cout << "^sem demanda" << endl;
-                }
+                // if(debugloso){
+                //     cout <<" [" << caminhoAtual << "][" << j << "] ---> " << custoAtual << endl;
+                //     if (!demandaJ)
+                //         cout << "^sem demanda" << endl;
+                // }
 
                 if(enableTerceirizacao){
                     if ( caminhoAtual && demandaJ && entregaVeiculo >= infos.limiteMinEnt && custoTerceirizar < (custoAtual + infos.custoij[j][0]) ){
                         terc1 = true;
                         custoTotalTerceirizado += custoTerceirizar;
                         
-                        if (debugloso)
-                            cout << "^terceiriza" << endl;
+                        // if (debugloso)
+                        //     cout << "^terceiriza" << endl;
                         
                         terceirizados.push_back(j);
                         infos.demanda[ j - 1 ] = 0;      // com a carga terceirizada e entregue, zeramos a demanda
@@ -205,6 +205,8 @@ int main (){
                 else
                     cout << veiculo[vic].rota[i] ;
             }
+            if(debugloso)
+                cout << " - custo da rota: " << veiculo[vic].custoCaminho;
             cout << endl;
         }
     }

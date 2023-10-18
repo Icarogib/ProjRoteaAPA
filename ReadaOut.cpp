@@ -28,7 +28,7 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
 
         int tmp; //temporario para pegar o valor do arquivo int
         int mDemanda = 0;
-        for ( i = 0 ; i < entregas - 1 ; i++ ){
+        for ( i = 0 ; i < entregas ; i++ ){
             fp >> tmp;  // manda do arquivo para temporario
 
             if( !i )
@@ -40,17 +40,17 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
         }
         
 
-        for ( i = 0 ; i < entregas - 1 ; i++ ){
+        for ( i = 0 ; i < entregas ; i++ ){
             fp >> tmp;
             custoTerc.push_back(tmp); // manda para o vector custo da Terceirizacao | acessado por custoTerc[i]
         }
 
 
-        for ( i = 0 ; i < entregas ; i++ ){ // percorre a linha i da matriz
+        for ( i = 0 ; i < entregas + 1; i++ ){ // percorre a linha i da matriz
             
             std::vector<int> linhaTemp; // faz um vector temporario para cada linha
 
-            for ( j = 0 ; j < entregas ; j++ ){ // percorre a coluna j da matriz
+            for ( j = 0 ; j < entregas + 1 ; j++ ){ // percorre a coluna j da matriz
                 fp >> tmp;
                 
                 if( tmp > maiorCusto ) //maior custo 
@@ -82,7 +82,7 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
     if(debugRead){
         std::cout << "\nDemanda: " << std::endl;
 
-        for ( i = 0; i < entregas - 1 ; i++ ){
+        for ( i = 0; i < demanda.size() ; i++ ){
                 std::cout << "    [" << i+1 << "] = " << demanda[i];
         }
         std::cout << "\nMenor Demanda: " << menorDemanda << std::endl;
@@ -92,7 +92,7 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
     if(debugRead){
         std::cout << "\nCustoTerc: " << std::endl;
 
-        for ( i = 0; i < entregas - 1 ; i++ ){
+        for ( i = 0; i < custoTerc.size() ; i++ ){
                 std::cout << "    [" << i+1 << "] = " << custoTerc[i];
         }
     }
