@@ -32,9 +32,11 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
             fp >> tmp;  // manda do arquivo para temporario
 
             if( !i )
-                menorDemanda = tmp;
+                maiorDemanda = menorDemanda = tmp;
             if ( menorDemanda > tmp )
                 menorDemanda = tmp;
+            if ( maiorDemanda < tmp )
+                maiorDemanda = tmp;
 
             demanda.push_back(tmp); // manda para o vector demanda | acessado por demanda[i]
         }

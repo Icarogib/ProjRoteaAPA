@@ -15,6 +15,7 @@ class ReadaOut {
         int custoVeiculo; // preco por usar um veiculo
         int maiorCusto;   // maior custo
         int menorDemanda; // menor demanda
+        int maiorDemanda; // maior demanda
 
         std::vector<int> demanda; //"array" de demandas
         std::vector<int> custoTerc; //"array" de tercerizacao

@@ -16,7 +16,7 @@ int main (){
     ReadaOut infos;
     
     int vic, caminhoAtual, custoAtual, custoTotal, custoTotalCaminho, custoTotalVeiculo, custoTotalTerceirizado,
-    menorcusto, caminhoProx, cargaTotal, demandaJ, demandaEntregue, menorDemanda, custoTerceirizar, entregaVeiculo;
+    menorcusto, caminhoProx, cargaTotal, demandaJ, demandaEntregue, menorDemanda, custoTerceirizar, entregaVeiculo, maiorDemanda;
     
     long unsigned int entregasFeitas;
     vector<int> terceirizados;
@@ -29,6 +29,7 @@ int main (){
     Veiculo veiculo[infos.veiculos];                                     // cria frota de veiculos
 
     menorDemanda = infos.menorDemanda;                                   // inicializa menorDemanda, apenas para a primeira vez do while
+    maiorDemanda = infos.maiorDemanda;
 
     // Loop para veiculos
     for (vic = 0; vic < infos.veiculos; vic++){                          // percorre enquanto houver veículos disponiveis
@@ -46,17 +47,21 @@ int main (){
         while( menorDemanda && menorDemanda <= veiculo[vic].carga && entregasFeitas != ( infos.demanda.size() )){
                                                                              // se houver demanda, o veiculo estar carregado
              // inicializa que o menor custo eh o maior                      // com uma carga maior do que eh demandado.
-             menorcusto = infos.maiorCusto;                                  
+             menorcusto = infos.maiorCusto;
+             menorDemanda = maiorDemanda;                                  
+             maiorDemanda = 0;
+             
                                                
             if( veiculo[vic].carga != cargaTotal )                           // se nao houve entrega, comecar do 0
                 caminhoAtual = caminhoProx;                                  // atualiza o fixo quando há entrega
             
 
                             //DEBUGLOSO**
-            // if(debugloso)
-            //     cout << "\nVerificando melhor a partir de [" << caminhoAtual << "]:" << endl;
+            if(debugloso)
+                cout << "\nVerificando melhor a partir de [" << caminhoAtual << "]:" << endl;
 
             bool terc1 = false;
+            
             // Loop menor custo mais proximo a partir do ponto que foi entregue
             for( long unsigned int j = 1; j < infos.custoij.size() ; j++ ){     // ponto de partida fixo
                                                                                 // passamos por todas as possibilidades
@@ -67,22 +72,30 @@ int main (){
                 custoTerceirizar = infos.custoTerc[j-1];
                 
                 // recupera a demanda dos pontos que estao sendo passados    
-                demandaJ = infos.demanda[j-1];                             
+                demandaJ = infos.demanda[j-1];                 
+
+                
+                if ( demandaJ > maiorDemanda )
+                    maiorDemanda = demandaJ;
+
+                if ( demandaJ && demandaJ < menorDemanda )
+                    menorDemanda = demandaJ;
                 
                             //DEBUGLOSO**
-                // if(debugloso){
-                //     cout <<" [" << caminhoAtual << "][" << j << "] ---> " << custoAtual << endl;
-                //     if (!demandaJ)
-                //         cout << "^sem demanda" << endl;
-                // }
+                if(debugloso){
+                    cout <<" [" << caminhoAtual << "][" << j << "] ---> " << custoAtual << endl;
+                    if (!demandaJ)
+                        cout << "^sem demanda" << endl;
+                }
+
 
                 if(enableTerceirizacao){
                     if ( caminhoAtual && demandaJ && entregaVeiculo >= infos.limiteMinEnt && custoTerceirizar < (custoAtual + infos.custoij[j][0]) ){
                         terc1 = true;
                         custoTotalTerceirizado += custoTerceirizar;
                         
-                        // if (debugloso)
-                        //     cout << "^terceiriza" << endl;
+                        if (debugloso)
+                            cout << "^terceiriza" << endl;
                         
                         terceirizados.push_back(j);
                         infos.demanda[ j - 1 ] = 0;      // com a carga terceirizada e entregue, zeramos a demanda
@@ -97,8 +110,12 @@ int main (){
                     caminhoProx = j;            // proximo ponto para fixar                                 // entregar a carga naquele ponto
                     demandaEntregue = demandaJ; // a demanda que foi entregue com o menor custo
                 }
+                
             }
+            if(debugloso)
+                cout << "Menor demanda: " << menorDemanda << " - maior demanda: " << maiorDemanda << endl;
             
+
                             //DEBUGLOSO**
             if(debugloso && !terc1 ){
                 cout <<"\n\nMenorCusto [" << caminhoAtual << "][" << caminhoProx << "] com custo: " <<
@@ -130,7 +147,6 @@ int main (){
                 entregaVeiculo = entregasFeitas - terceirizados.size();
             }
         }
-
             
             veiculo[vic].custoCaminho += infos.custoij[caminhoProx][0];     //custo caminho para voltar        
             veiculo[vic].custoRota.push_back(infos.custoij[caminhoProx][0]); 
