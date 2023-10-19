@@ -1,4 +1,4 @@
-#include "Veiculo.h"
+#include "Guloso.h"
 
 bool debugloso = false;
 bool enableTerceirizacao = true;
@@ -12,8 +12,29 @@ using namespace std;
 // Organizar e nao deixar passar de 4 camadas.
 // Testar a fundo a terceirizacao, ver se ela deixa alguem com demanda no fim.
 
-int main (){	
-    ReadaOut infos;
+Guloso::Guloso () {
+    //inicializacao
+}
+
+void terceirizaFunc ( bool &terc1, int &custoTotalTerceirizado, int custoTerceirizar, int j,
+                    vector<int> &terceirizados, ReadaOut &infos, int &demandaJ, unsigned long int &entregasFeitas ) {
+    
+    // mostra que passou pela terceirizacao e soma o custo da terceirizacao
+    terc1 = true;
+    custoTotalTerceirizado += custoTerceirizar;
+    
+    if (debugloso)
+        cout << "^terceiriza" << endl;
+    
+    // coloca no vector os lugares terceirizados
+    terceirizados.push_back(j);
+    infos.demanda[ j - 1 ] = 0;      // com a carga terceirizada e entregue, zeramos a demanda
+    demandaJ = 0;
+    entregasFeitas++;               
+}
+
+void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){	
+    //ReadaOut infos;
     
     int vic, caminhoAtual, custoAtual, custoTotal, custoTotalCaminho, custoTotalVeiculo, custoTotalTerceirizado,
     menorcusto, caminhoProx, cargaTotal, demandaJ, demandaEntregue, menorDemanda, custoTerceirizar, entregaVeiculo, maiorDemanda;
@@ -24,14 +45,15 @@ int main (){
     // inicializando com 0
     custoTotal = custoTotalVeiculo = custoTotalCaminho = custoTotalTerceirizado = entregasFeitas = entregaVeiculo  = 0 ;
     
-    infos.lerValor();                                                    // recupera valores do arquivo
+    //infos.lerValor();                                                    // recupera valores do arquivo
+    vic = infos.veiculos;
 
-    Veiculo veiculo[infos.veiculos];                                     // cria frota de veiculos
+    //Veiculo veiculo[vic];                                     // cria frota de veiculos
 
     menorDemanda = infos.menorDemanda;                                   // inicializa menorDemanda, apenas para a primeira vez do while
     maiorDemanda = infos.maiorDemanda;
 
-    // Loop para veiculos
+    // ========================== Loop dos Veiculos ==========================
     for (vic = 0; vic < infos.veiculos; vic++){                          // percorre enquanto houver veículos disponiveis
 
                             //DEBUGLOSO**
@@ -43,7 +65,7 @@ int main (){
         veiculo[vic].custoCaminho = caminhoAtual = 0;                    // declara que seu custo esta 0 e cada veiculo comeca do 0
 
 
-        // Loop rota do veiculo selecionado
+        // ========================== Loop das entregas de um veiculo ==========================
         while( menorDemanda && menorDemanda <= veiculo[vic].carga && entregasFeitas != ( infos.demanda.size() )){
                                                                              // se houver demanda, o veiculo estar carregado
              // inicializa que o menor custo eh o maior                      // com uma carga maior do que eh demandado.
@@ -62,7 +84,10 @@ int main (){
 
             bool terc1 = false;
             
+            // ========================== Loop dos pontos ==========================
+
             // Loop menor custo mais proximo a partir do ponto que foi entregue
+
             for( long unsigned int j = 1; j < infos.custoij.size() ; j++ ){     // ponto de partida fixo
                                                                                 // passamos por todas as possibilidades
                 // recupera o custos de ida de um ponto ao outro                 
@@ -90,18 +115,11 @@ int main (){
 
 
                 if(enableTerceirizacao){
-                    if ( caminhoAtual && demandaJ && entregaVeiculo >= infos.limiteMinEnt && custoTerceirizar < (custoAtual + infos.custoij[j][0]) ){
-                        terc1 = true;
-                        custoTotalTerceirizado += custoTerceirizar;
-                        
-                        if (debugloso)
-                            cout << "^terceiriza" << endl;
-                        
-                        terceirizados.push_back(j);
-                        infos.demanda[ j - 1 ] = 0;      // com a carga terceirizada e entregue, zeramos a demanda
-                        demandaJ = 0;
-                        entregasFeitas++;
-                    }
+                    if ( caminhoAtual && demandaJ && entregaVeiculo >= infos.limiteMinEnt && 
+                            custoTerceirizar < (custoAtual + infos.custoij[j][0]) )
+
+                        terceirizaFunc( terc1, custoTotalTerceirizado, custoTerceirizar, j,
+                                        terceirizados, infos, demandaJ, entregasFeitas );
                 }
 
                 if( custoAtual && demandaJ && custoAtual < menorcusto && demandaJ <= veiculo[vic].carga ){  // se possuir custo e demanda, se
@@ -112,6 +130,9 @@ int main (){
                 }
                 
             }
+
+            // ========================== FIM Loop dos pontos ==========================
+
             if(debugloso)
                 cout << "Menor demanda: " << menorDemanda << " - maior demanda: " << maiorDemanda << endl;
             
@@ -125,7 +146,10 @@ int main (){
                 cout << "\nCARGA ENTREGUE EM: " << caminhoProx << "\nRemovendo demanda...." << endl;
             }
 
+            // // ========================== Passa informacoes dos veiculos ==========================
+
             if(enableTerceirizacao){
+                // se tiver terceirizacao, só passara se nao tiver terceirizado
                 if( !terc1 ){
                     veiculo[vic].custoCaminho += menorcusto;   // colocar veiculo custo do caminho dele
                     veiculo[vic].carga -= demandaEntregue;     // carga entregue, zerar demanda em [caminhoProx]
@@ -135,6 +159,7 @@ int main (){
                     entregasFeitas++;                          // soma de entregas no total de todos os veiculos e terceirizacao
                 }
             }else{
+                    // se nao houver terceirizacao, passará sempre
                     veiculo[vic].custoCaminho += menorcusto;   // colocar veiculo custo do caminho dele
                     veiculo[vic].carga -= demandaEntregue;     // carga entregue, zerar demanda em [caminhoProx]
                     veiculo[vic].rota.push_back(caminhoProx);  // coloca na rota do veiculo
@@ -144,10 +169,17 @@ int main (){
             }
             
             if(enableTerceirizacao){
+                // entregas feitas por veiculos da empresa
                 entregaVeiculo = entregasFeitas - terceirizados.size();
             }
         }
+
+        // ========================== Fim do loop das entregas de um veiculo ==========================
             
+            // entao, nos fazemos ele voltar para o deposito.
+
+            // ========================== Volta do veiculo ==========================
+
             veiculo[vic].custoCaminho += infos.custoij[caminhoProx][0];     //custo caminho para voltar        
             veiculo[vic].custoRota.push_back(infos.custoij[caminhoProx][0]); 
             custoTotalCaminho += veiculo[vic].custoCaminho;
@@ -157,6 +189,8 @@ int main (){
                 custoTotal = custoTotalCaminho + custoTotalVeiculo + custoTotalTerceirizado;
             else
                 custoTotal = custoTotalCaminho + custoTotalVeiculo;
+            
+            // ========================== Fim da Volta  ==========================
 
                             //DEBUGLOSO**
         if(debugloso){
@@ -188,14 +222,19 @@ int main (){
             
             cout << "\nEntregas Efetuadas: " << entregasFeitas <<
                     "\n\n==================== FIM RELATORIO VIAGEM ======================" << endl;
-        }
+        }               //FIM-DEBUGLOSO**
 
-        // Condicao de Saida
-        if( entregasFeitas == (infos.demanda.size()) ){ // se a maior demanda for 0 ou terem entregue todas as demandas 
-            break;                                                                              // acabam as entregas
+
+        // ------ Condicao de saida ------
+        // se todas as entregas foram realizadas, saia (nao utilizando novos veiculos)
+        if( entregasFeitas == (infos.demanda.size()) ){ 
+            break;                                                                              
         } 
         
     }
+    // ========================== Fim do Loop dos Veiculos ==========================
+        
+        // se todas as entregas foram realizadas, ele saira, podendo utilizar menos veiculos
 
     // ========================================= Apresentacao de Resultados ========================================= //
     if(enableTerceirizacao){
@@ -212,6 +251,7 @@ int main (){
 
         if( veiculo[vic].rota.size() ){
             
+            //DEBUGLOSO**
             if(debugloso)
                 cout << "\nVeiculo [" << vic+1 << "]: ";
         
@@ -221,13 +261,14 @@ int main (){
                 else
                     cout << veiculo[vic].rota[i] ;
             }
+            //DEBUGLOSO**
             if(debugloso)
                 cout << " - custo da rota: " << veiculo[vic].custoCaminho;
+
             cout << endl;
         }
     }
 
     // ========================================= Fim Apresentacao de Result ========================================= //
 
-    return 0;
 }

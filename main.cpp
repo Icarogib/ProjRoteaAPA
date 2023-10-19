@@ -1,17 +1,16 @@
-#include "ReadaOut.h"
+#include "Guloso.h"
 
 using namespace std;
 
 int main (){	
-    //int valorOpcao, sair = 0, voltar = 0, tipo;
-    //string e;
-  
-    ReadaOut infos;
-    
-    infos.lerValor();
 
+  Guloso guloso;
+  ReadaOut infos;
 
-  	//infos.salva();
-    
+  infos.lerValor();
+  Veiculo caminhaoGuloso[ infos.veiculos ];
+
+  guloso.GulosoFunc( infos, caminhaoGuloso );
+
 	return 0;
 }
