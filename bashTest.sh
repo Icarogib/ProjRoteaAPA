@@ -2,9 +2,9 @@
 
 printf "========== Guloso na main ========== \n\n"
 ./testemain
-printf "\n========== VND Uma rota (matrizAdj) ========== \n\n"
+printf "\n========== Prim Uma rota (matrizAdj) ========== \n\n"
 ./teste01
-printf "\n========== VND Uma rota (listaAdj) ========== \n\n"
+printf "\n========== Prim Uma rota (listaAdj) ========== \n\n"
 ./testeVNDListAdj
 printf "\n========== Terceirizacao ========== \n\n"
 ./testeThirdParty

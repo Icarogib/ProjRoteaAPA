@@ -99,6 +99,8 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
                 // recupera a demanda dos pontos que estao sendo passados    
                 demandaJ = infos.demanda[j-1];                 
 
+                if (!demandaJ || !custoAtual )
+                    continue;
                 
                 if ( demandaJ > maiorDemanda )
                     maiorDemanda = demandaJ;
@@ -115,17 +117,17 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
 
 
                 if(enableTerceirizacao){
-                    if ( caminhoAtual && demandaJ && entregaVeiculo >= infos.limiteMinEnt && 
+                    if ( caminhoAtual && entregaVeiculo >= infos.limiteMinEnt && 
                             custoTerceirizar < (custoAtual + infos.custoij[j][0]) )
 
                         terceirizaFunc( terc1, custoTotalTerceirizado, custoTerceirizar, j,
                                         terceirizados, infos, demandaJ, entregasFeitas );
                 }
 
-                if( custoAtual && demandaJ && custoAtual < menorcusto && demandaJ <= veiculo[vic].carga ){  // se possuir custo e demanda, se
-                                                                                                            // for menor que o menor custo 
-                    menorcusto = custoAtual;    // atualiza o menor custo com o valor do custo atual        // anterior e se o veiculo puder
-                    caminhoProx = j;            // proximo ponto para fixar                                 // entregar a carga naquele ponto
+                if( custoAtual < menorcusto && demandaJ <= veiculo[vic].carga ){  // se for menor que o menor custo anterior e se o veiculo puder
+                                                                                                            //   entregar a carga naquele pont
+                    menorcusto = custoAtual;    // atualiza o menor custo com o valor do custo atual 
+                    caminhoProx = j;            // proximo ponto para fixar                           
                     demandaEntregue = demandaJ; // a demanda que foi entregue com o menor custo
                 }
                 
