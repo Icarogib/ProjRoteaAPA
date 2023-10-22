@@ -1,3 +1,6 @@
+#ifndef GULOSO_H
+#define GULOSO_H
+
 #include "Veiculo.h"
 
 class Guloso {
@@ -7,3 +10,5 @@ class Guloso {
         void GulosoFunc ( ReadaOut info, Veiculo *veiculo );
 
 };
+
+#endif

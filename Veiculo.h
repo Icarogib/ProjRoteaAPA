@@ -1,3 +1,6 @@
+#ifndef VEICULO_H
+#define VEICULO_H
+
 #include "ReadaOut.h"
 
 class Veiculo {
@@ -13,3 +16,5 @@ class Veiculo {
         // vai ser um a mais comparado ao rota
 
 };
+
+#endif

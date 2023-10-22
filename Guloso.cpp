@@ -63,7 +63,7 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
 
         veiculo[vic].carga = cargaTotal = infos.capacidade;              // declara a carga do veiculo, e a capacidade total dele
         veiculo[vic].custoCaminho = caminhoAtual = 0;                    // declara que seu custo esta 0 e cada veiculo comeca do 0
-
+        veiculo[vic].rota.push_back(0);                                  // comeca do 0;
 
         // ========================== Loop das entregas de um veiculo ==========================
         while( menorDemanda && menorDemanda <= veiculo[vic].carga && entregasFeitas != ( infos.demanda.size() )){
@@ -184,6 +184,7 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
 
             veiculo[vic].custoCaminho += infos.custoij[caminhoProx][0];     //custo caminho para voltar        
             veiculo[vic].custoRota.push_back(infos.custoij[caminhoProx][0]); 
+            veiculo[vic].rota.push_back(0);
             custoTotalCaminho += veiculo[vic].custoCaminho;
             custoTotalVeiculo += infos.custoVeiculo;
 
@@ -257,9 +258,10 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
             if(debugloso)
                 cout << "\nVeiculo [" << vic+1 << "]: ";
         
-            for( long unsigned int i = 0; i < veiculo[vic].rota.size(); i++ ){
-                if (i > 0)
-                    cout << " " << veiculo[vic].rota[i] ;
+            for( long unsigned int i = 1; i < veiculo[vic].rota.size() - 1; i++ ){
+                if (i > 1){
+                    cout << " " << veiculo[vic].rota[i];
+                }
                 else
                     cout << veiculo[vic].rota[i] ;
             }

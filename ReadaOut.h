@@ -1,3 +1,6 @@
+#ifndef READAOUT_H
+#define READAOUT_H
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -22,3 +25,5 @@ class ReadaOut {
         std::vector<std::vector<int> > custoij; //"array" de tercerizacao
 
 };
+
+#endif
