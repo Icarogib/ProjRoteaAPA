@@ -19,6 +19,6 @@ class ReadaOut {
 
         std::vector<int> demanda; //"array" de demandas
         std::vector<int> custoTerc; //"array" de tercerizacao
-        std::vector<std::vector<int>> custoij; //"array" de tercerizacao
+        std::vector<std::vector<int> > custoij; //"array" de tercerizacao
 
 };
