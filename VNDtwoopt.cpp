@@ -7,6 +7,16 @@ VNDtwoopt::VNDtwoopt() {
     //inicializacao
 }
 
+void funcTrocaRota ( Veiculo *caminhao, int *auxI, int *auxJ ) {
+    int j = *auxJ;
+
+    for (int i = *auxI; i < j ; i++){
+        int aux = caminhao->rota[i];
+        caminhao->rota[i] = caminhao->rota[j];
+        caminhao->rota[j--] = aux;           
+    }
+}
+
 // funcao que substitui o menor custo, se for menor realmente, e sua posicao.
 void funcMenorCusto ( int *menorCusto, int custoSolucaoMod, int *auxI, int *auxJ, int i, int j ){
         
@@ -101,9 +111,26 @@ void funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao, int *custoSolucaoMod, i
             std::cout << "\nNao houve alteracao para o veiculo [" << vic + 1 << "]" << std::endl;
             return;
         }else{
-            std::cout << "O custo para o caminhao [" << vic+1 << "] era: " << caminhao[vic].custoCaminho << "\nE agora o custo passou a ser: " << *menorCusto 
+            std::cout << "\nO custo para o caminhao [" << vic+1 << "] era: " << caminhao[vic].custoCaminho << "\nE agora o custo passou a ser: " << *menorCusto 
             << "\n\nTrocando as rotas: [" << *auxI << "]=" << caminhao[vic].rota[*auxI] << " e [" << *auxJ << "]=" << caminhao[vic].rota[*auxJ] << " de lugar." << std::endl;
-            std::cout << "\n========= Fim 2-opt para veiculo [" << vic+1 << "] =========" << std::endl;
+            
+            if(debugTO){
+                std::cout << "\nantiga rota: ";
+                for (const auto& element : caminhao[vic].rota) {
+                    std::cout << element << " ";
+                }
+            }
+            
+            funcTrocaRota ( &caminhao[vic], auxI, auxJ );
+
+            if(debugTO){
+                std::cout << "\nnova rota:   ";
+                for (const auto& element : caminhao[vic].rota) {
+                    std::cout << element << " ";
+                }
+                std::cout << "\n========= Fim 2-opt para veiculo [" << vic+1 << "] =========" << std::endl;
+            }
+
         }
     }
 }
@@ -116,4 +143,5 @@ void VNDtwoopt::callVNDTO ( ReadaOut info, Veiculo *caminhao ){
     int menorCusto, custoSolucaoMod, auxI, auxJ;
 
     funcLoopVeiculo ( info, caminhao, &custoSolucaoMod, &menorCusto, &auxI, &auxJ);
+    
 }
