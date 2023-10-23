@@ -7,17 +7,24 @@ VNDtwoopt::VNDtwoopt() {
     //inicializacao
 }
 
+// funcao que substitui o menor custo, se for menor realmente, e sua posicao.
+void funcMenorCusto ( int *menorCusto, int custoSolucaoMod, int *auxI, int *auxJ, int i, int j ){
+    if( *menorCusto > custoSolucaoMod ){
+        *menorCusto = custoSolucaoMod;
+        *auxI = i + 1;
+        *auxJ = j;
+    }
+}
+
 void VNDtwoopt::callVNDTO ( ReadaOut info, Veiculo *caminhao ){
 
-    long unsigned int i, j;
     int menorCusto, custoSolucaoMod, auxI, auxJ;
     
-    if ( caminhao[0].rota.size() < 4 ){
-        std::cout << "\nrota nao pode ser utilizada, pois eh menor que 4!" << std::endl;
+    if ( caminhao[0].rota.size() < 6 ){
+        std::cout << "\nRota nao pode ser utilizada, pois eh menor que o numero minimo!" << std::endl;
         return;
     }
 
-    // OBS TA TODO CAGADO, NINGUEM MEXE, DEPOIS VOU AJEITAR!!
     if (debugTO){
 
         std::cout << "\n ========== INICIO VNDTWOOPT! ========== \n\nElementos rota: ";
@@ -34,10 +41,10 @@ void VNDtwoopt::callVNDTO ( ReadaOut info, Veiculo *caminhao ){
 
     menorCusto = caminhao[0].custoCaminho;
     
-    for (i = 0; i < caminhao[0].rota.size() - 5 ; i++){ // menos 5 pq: esse algoritmo nao pode passar do limite da rota,
+    for ( long unsigned int i = 0; i < caminhao[0].rota.size() - 5 ; i++){ // menos 5 pq: esse algoritmo nao pode passar do limite da rota,
                                                         // ja que tem sempre uma diferenca de 5 (numeros entre o primeiro e o quinto)
                                                         // 5 - 1 = 4; comecamos com 4 e expandimos
-        for (j = i + 4; j < caminhao[0].rota.size() - 1; j++){
+        for ( long unsigned int j = i + 4; j < caminhao[0].rota.size() - 1; j++){
             std::cout << "\n =====> Troca numero: " << j - 3 << std::endl;
             //pensar depois em como fazer certo
 
@@ -48,11 +55,7 @@ void VNDtwoopt::callVNDTO ( ReadaOut info, Veiculo *caminhao ){
 
             custoSolucaoMod = caminhao[0].custoCaminho - caminhao[0].custoRota[i] - caminhao[0].custoRota[j] + custoTroca1 + custoTroca2;
             
-            if( menorCusto > custoSolucaoMod ){
-                menorCusto = custoSolucaoMod;
-                auxI = i + 1;
-                auxJ = j;
-            }
+            funcMenorCusto ( &menorCusto, custoSolucaoMod, &auxI, &auxJ, i, j );
 
             if (debugTO){
                 std::cout << "\nInicio: ";
@@ -71,8 +74,16 @@ void VNDtwoopt::callVNDTO ( ReadaOut info, Veiculo *caminhao ){
         if (debugTO)
             std::cout << "\n===========================================" << std::endl;
     }
+
+    if ( caminhao[0].custoCaminho == menorCusto ){
+        std::cout << "\nNao houve alteracao" << std::endl;
+        return;
+    }else{
+        std::cout << "\nHouve alteracao!" << std::endl;
+    }
+
     if (debugTO){
-        std::cout << "\n\nFINAL!!!\n\nO custo era: " << caminhao[0].custoCaminho << "\nPassou a ser: " << menorCusto 
+        std::cout << "\nO custo era: " << caminhao[0].custoCaminho << "\nPassou a ser: " << menorCusto 
         << "\nTrocando as rotas: " << caminhao[0].rota[auxI] << " e " << caminhao[0].rota[auxJ] << " de lugar." << std::endl;
 
     }
