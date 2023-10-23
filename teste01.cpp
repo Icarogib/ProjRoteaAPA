@@ -97,7 +97,7 @@ pair<int, vector<int>> Grafo::primMST()
 int main()
 {
     ReadaOut infos;
-    infos.lerValor();
+    infos.lerValor( "n31k5_A.txt" );
     infos.demanda.insert(infos.demanda.begin(), 0);
     
     Q = infos.capacidade;

@@ -4,12 +4,13 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 
 class ReadaOut {
     public:
         ReadaOut();
 
-        void lerValor ();   
+        void lerValor ( std::string file );   
 
         int entregas;   // numero de entregas
         int veiculos;   // n de veiculos disponiveis

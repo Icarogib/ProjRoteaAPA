@@ -6,12 +6,12 @@ ReadaOut::ReadaOut () {
     //inicializacao
 }
 
-void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd programa abre)
+void ReadaOut::lerValor ( std::string file ) {    //retira do arquivo e coloca na memoria (qnd programa abre)
     int i, j;
 
     maiorCusto = menorDemanda = 0;
     
-    std::ifstream fp("n31k5_A.txt");    //arquivo para abrir
+    std::ifstream fp( file );    //arquivo para abrir
     
     if (!fp.is_open()) {    // verificacao de erro ao abrir arquivo
         std::cout << "erro ao abrir o arquivo para ler\n";

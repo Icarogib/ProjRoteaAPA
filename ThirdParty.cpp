@@ -9,7 +9,7 @@ int main(){
     int menor1, menor2 = INT_MAX;
     int soma = 0;
     vector<int> somas;
-    infos.lerValor();
+    infos.lerValor( "n31k5_A.txt" );
 
     cout << "Custos de Terceirizacao: ";
     for(auto& i : infos.custoTerc){ // custo terc

@@ -9,7 +9,7 @@ int main (){
   ReadaOut infos;
   VNDtwoopt my2opt;
 
-  infos.lerValor();
+  infos.lerValor( "n31k5_A.txt" );
   Veiculo caminhaoGuloso[ infos.veiculos ];
 
   guloso.GulosoFunc( infos, caminhaoGuloso );

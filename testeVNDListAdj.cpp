@@ -91,7 +91,7 @@ pair<int, vector<int>> Grafo::primMST()
 
     // Calcula o custo do caminho mínimo.
     int custoTotal = 0;
-    for (int i = 1; i < caminho.size(); i++)
+    for ( long unsigned int i = 1; i < caminho.size(); i++)
     {
         for (const auto &vizinho : adjList[caminho[i - 1]])
         {
@@ -109,7 +109,7 @@ pair<int, vector<int>> Grafo::primMST()
 int main()
 {
     ReadaOut infos;
-    infos.lerValor();
+    infos.lerValor( "n31k5_A.txt" );
     infos.demanda.insert(infos.demanda.begin(), 0);
 
     Q = infos.capacidade;
