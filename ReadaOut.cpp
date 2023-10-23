@@ -11,7 +11,7 @@ void ReadaOut::lerValor () {    //retira do arquivo e coloca na memoria (qnd pro
 
     maiorCusto = menorDemanda = 0;
     
-    std::ifstream fp("n10k5_B.txt");    //arquivo para abrir
+    std::ifstream fp("n31k5_A.txt");    //arquivo para abrir
     
     if (!fp.is_open()) {    // verificacao de erro ao abrir arquivo
         std::cout << "erro ao abrir o arquivo para ler\n";
