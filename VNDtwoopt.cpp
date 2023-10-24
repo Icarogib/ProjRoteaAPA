@@ -1,5 +1,4 @@
 #include "VNDtwoopt.h"
-#include "Veiculo.h"
 
 bool debugTO = false;
 
@@ -46,7 +45,7 @@ void funcLoopJanela ( ReadaOut info, Veiculo caminhao, int vic, int *custoSoluca
         for ( long unsigned int j = i + 4; j < caminhao.rota.size() - 1; j++){
 
             if ( debugTO )
-                std::cout << "\n =====> Troca numero: " << j - 3 << std::endl;
+                std::cout << "\n =========== " << std::endl;
 
             int custoTroca1, custoTroca2;
 
@@ -109,7 +108,6 @@ void funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao, int *custoSolucaoMod, i
 
         if ( caminhao[vic].custoCaminho == *menorCusto ){
             std::cout << "\nNao houve alteracao para o veiculo [" << vic + 1 << "]" << std::endl;
-            return;
         }else{
             std::cout << "\nO custo para o caminhao [" << vic+1 << "] era: " << caminhao[vic].custoCaminho << "\nE agora o custo passou a ser: " << *menorCusto 
             << "\n\nTrocando as rotas: [" << *auxI << "]=" << caminhao[vic].rota[*auxI] << " e [" << *auxJ << "]=" << caminhao[vic].rota[*auxJ] << " de lugar." << std::endl;

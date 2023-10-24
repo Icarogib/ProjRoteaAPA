@@ -1,6 +1,6 @@
 #include "Guloso.h"
 
-bool debugloso = false;
+bool debugloso = true;
 bool enableTerceirizacao = true;
 
 using namespace std;
