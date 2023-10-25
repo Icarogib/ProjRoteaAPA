@@ -6,6 +6,118 @@ VNDVSwap::VNDVSwap() {
     //inicializacao
 }
 
-void VNDVSwap::callVNDVswap ( ReadaOut info, Veiculo *caminhao ){
+void funcLoopVSwap ( ReadaOut info, Veiculo caminhao1, Veiculo caminhao2 ){
+
+    int custoTrocaCaminhao1, custoTrocaCaminhao2;
+    int menor1, menor2;
+
+    menor1 = caminhao1.custoCaminho;
+    menor2 = caminhao2.custoCaminho;
+
+    for (int i = 1; i < caminhao1.rota.size() - 1; i++){
+        
+        int rota1i = caminhao1.rota[ i-1 ];             // rota i - 1
+        int rotai = caminhao1.rota[ i ];                // rota i
+        int rotai1 = caminhao1.rota[ i+1 ];             // rota i + 1  (foi feito para evitar segmentation fault)
+
+        int custoRota1i = info.custoij[ rota1i ][ rotai ];    // custo do anterior ao que estamos vendo (i-1 e i)
+        int custoRotai1 = info.custoij[ rotai ][ rotai1];     // custo do atual ao proximo  (i e i+1)
+
+        if ( debugVSp ){
+            std::cout << "\nCusto i: (i-1) - i [" << rota1i << "][" << rotai << "] = " << custoRota1i << std::endl;
+            std::cout << "Custo i: i - (i+1) [" << rotai << "][" << rotai1 << "] = " << custoRotai1 << std::endl;
+            std::cout << "\nRota1 [" << i << "]: ";
+            std::cout << rotai << std::endl;
+        }
+
+        for (int j = 1; j < caminhao2.rota.size() - 1; j++){
+            
+            int rota1j = caminhao2.rota[ j-1 ];
+            int rotaj = caminhao2.rota[ j ];
+            int rotaj1 = caminhao2.rota[ j + 1 ];
+
+            int custoRota1j = info.custoij[ rota1j ][ rotaj ];
+            int custoRotaj1 = info.custoij[ rotaj ][ rotaj1];
+
+            // calcula o custo se trocar aqueles dois pontos
+            custoTrocaCaminhao1 = caminhao1.custoCaminho - custoRota1i - custoRotai1  
+                                + info.custoij[rota1i][rotaj] + info.custoij[ rotaj ][ rotai1 ];
+
+            custoTrocaCaminhao2 = caminhao2.custoCaminho - custoRota1j - custoRotaj1 + info.custoij[rota1j][rotai] 
+                                + info.custoij[ rotai ][ rotaj1 ];
+
+            if ( debugVSp ){
+                std::cout << "\nRota2 [" << j << "]: " << rotaj << std::endl;
+                std::cout << "\nCusto j: (j-1) - j [" << rota1j << "][" << rotaj << "] = " << custoRota1j << std::endl;
+                std::cout << "Custo j: j - (j+1) [" << rotaj << "][" << rotaj1 << "] = " << custoRotaj1 << std::endl;
+
+                std::cout << "\n1 - Trocando [" << rotai << "] com [" << rotaj << "] - Nova aresta veiculo 1: "
+                        << rota1i << " -> " << rotaj << " -> " << rotai1 << "\nCusto: "
+                        << rota1i << " -> " << rotaj << " = " << info.custoij[rota1i][rotaj] 
+                        << "\t e Custo: " << rotaj << " -> " << rotai1 << " = " << info.custoij[ rotaj ][ rotai1 ] 
+                        << std::endl;
+
+                std::cout << "\n2 - Trocando [" << rotaj << "] com [" << rotai << "] - Nova aresta veiculo 2: "
+                        << rota1j << " -> " << rotai << " -> " << rotaj1 << "\nCusto: "
+                        << rota1j << " -> " << rotai << " = " << info.custoij[rota1j][rotai] 
+                        << "\t e Custo: " << rotai << " -> " << rotaj1 << " = " << info.custoij[ rotai ][ rotaj1 ] 
+                        << std::endl;
+
+                        std::cout << "\nCalculos Caminhao 1: " << caminhao1.custoCaminho << 
+                        " - " << custoRota1i << " - " << custoRotai1 << 
+                        " + " << info.custoij[rota1i][rotaj]  << 
+                        " + " << info.custoij[ rotaj ][ rotai1 ] << " = " << custoTrocaCaminhao1
+                              << std::endl;
+
+                        std::cout << "\nCalculos Caminhao 2: " << caminhao2.custoCaminho << 
+                        " - " << custoRota1j << " - " << custoRotaj1 << 
+                        " + " << info.custoij[rota1j][rotai]  <<
+                        " + " << info.custoij[ rotai ][ rotaj1 ] << " = " << custoTrocaCaminhao2 <<
+                        "\n====================================" << std::endl;
+            }
+        
+            //IMPLEMENTAR LOGICA PRA GUARDAR OS MENORES.
+            /*
+            if ( caminhao1.custoCaminho > custoTrocaCaminhao1 && caminhao2.custoCaminho > custoTrocaCaminhao2 ){
+                menor1 =
+                menor2
+            }*/
+
+        }
+    }
+    
+
+}
+
+void funcLoopVeiculos ( ReadaOut info, Veiculo *veiculo ) {
+
+    //recursividade? eh possivel?
+    for ( int vic1 = 0; vic1 < info.veiculos; vic1++ ){
+        
+        if(debugVSp)
+            std::cout << "\n";
+
+        if(!veiculo[vic1].rota.size())
+            break;
+
+        for ( int vic2 = vic1 + 1; vic2 < info.veiculos; vic2++ ){
+            if( !veiculo[vic2].rota.size() )
+                break;
+
+            if(debugVSp){
+                std::cout << "\nCaminhoes: [" << vic1+1 << "][" << vic2+1 << "]";
+                //std::cout << veiculo[vic1].rota.size() << " - " << veiculo[vic2].rota.size() ;
+            }
+
+            funcLoopVSwap ( info, veiculo[vic1], veiculo[vic2] );
+            
+        }
+    }
+}
+
+void VNDVSwap::callVNDVswap ( ReadaOut info, Veiculo *veiculos ){
+    int pior, menospior;
+
+    funcLoopVeiculos ( info, veiculos );
     
 }

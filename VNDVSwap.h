@@ -7,7 +7,7 @@ class VNDVSwap{
     public:
         VNDVSwap ();
 
-        void callVNDVswap ( ReadaOut info, Veiculo *caminhao );
+        void callVNDVswap ( ReadaOut info, Veiculo *veiculos );
 
 };
 
