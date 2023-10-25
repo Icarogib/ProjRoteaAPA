@@ -5,10 +5,10 @@ all: main teste01 ThirdParty testeVNDListAdj
 
 # ================     Main     ================
 
-main: main.o ReadaOut.o Veiculo.o Guloso.o VNDtwoopt.o VNDswap.o
-	$(CC) $(CFLAGS) -o testemain main.o ReadaOut.o Veiculo.o Guloso.o VNDtwoopt.o VNDswap.o
+main: main.o ReadaOut.o Veiculo.o Guloso.o VNDtwoopt.o VNDswap.o VNDVSwap.o
+	$(CC) $(CFLAGS) -o testemain main.o ReadaOut.o Veiculo.o Guloso.o VNDtwoopt.o VNDswap.o VNDVSwap.o
 
-main.o: main.cpp ReadaOut.h Veiculo.h Guloso.h VNDtwoopt.h VNDswap.h
+main.o: main.cpp ReadaOut.h Veiculo.h Guloso.h VNDtwoopt.h VNDswap.h VNDVSwap.h
 	$(CC) $(CFLAGS) -c main.cpp
 
 # ================ Terceirizacao ================
@@ -57,4 +57,4 @@ Veiculo.o: Veiculo.h
 Guloso.o: Guloso.h
 VNDtwoopt.o: VNDtwoopt.h
 VNDswap.o: VNDswap.h
-
+VNDVSwap.o: VNDVSwap.h
