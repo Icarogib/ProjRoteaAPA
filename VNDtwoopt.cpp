@@ -119,22 +119,25 @@ void funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao ) {
         }else{
             std::cout << "\nO custo para o caminhao [" << vic+1 << "] era: " << caminhao[vic].custoCaminho << "\nE agora o custo passou a ser: " << menorCusto 
             << "\n\nTrocando as rotas: [" << auxI << "]=" << caminhao[vic].rota[auxI] << " e [" << auxJ << "]=" << caminhao[vic].rota[auxJ] << " de lugar.\n" 
-            << "\n===============================" << std::endl;
+            << "\n=======================================" << std::endl;
             
             if(debugTO){
                 std::cout << "\nantiga rota: ";
                 for (const auto& element : caminhao[vic].rota) {
                     std::cout << element << " ";
                 }
+                std::cout << " - Custo: " << caminhao[vic].custoCaminho << std::endl;
             }
             
             funcTrocaRota ( &caminhao[vic], auxI, auxJ );
+            caminhao[vic].custoCaminho = menorCusto;
 
             if(debugTO){
                 std::cout << "\nnova rota:   ";
                 for (const auto& element : caminhao[vic].rota) {
                     std::cout << element << " ";
                 }
+                std::cout << " - Custo: " << caminhao[vic].custoCaminho << std::endl;
                 std::cout << "\n========= Fim 2-opt para veiculo [" << vic+1 << "] =========" << std::endl;
             }
 
