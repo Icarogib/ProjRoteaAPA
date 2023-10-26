@@ -53,9 +53,9 @@ int main (){
 
   guloso.GulosoFunc( infos, caminhaoGuloso );
  
-  swapperV.callVNDVswap( infos, caminhaoGuloso );
+  swapperV.callVNDVswap( infos, caminhaoGuloso ); // ok
 
-  //my2opt.callVNDTO( infos, caminhaoGuloso );
+  my2opt.callVNDTO( infos, caminhaoGuloso ); //ok
 
 
   //susu.realizarVND( caminhaoGuloso[0].rota, infos.custoij, caminhaoGuloso[0], infos.demanda);
