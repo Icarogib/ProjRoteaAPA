@@ -47,6 +47,8 @@ void funcLoopJanela ( ReadaOut info, Veiculo caminhao, int *menorCusto, int *aux
     for ( long unsigned int i = 0; i < caminhao.rota.size() - 5 ; i++){ // menos 5 pq esse algoritmo nao pode passar do limite da rota,
                                                                         // ja que sempre vai existir uma diferenca de 5 (numeros entre o zero(primeiro) e o quinto)
                                                                         // 5 - 1 = 4; comecamos com 4 e expandimos a janela
+        int custoRotai = info.custoij[caminhao.rota[i]][caminhao.rota[i+1]];
+        
         if(debugTO)
             std::cout << "\n\nPosicao Janela: [" << i << "]" << std::endl;
 
@@ -55,26 +57,25 @@ void funcLoopJanela ( ReadaOut info, Veiculo caminhao, int *menorCusto, int *aux
             if ( debugTO )
                 std::cout << "\n =========== " << std::endl;
 
-            int custoTroca1, custoTroca2;
+            int custoTroca1 = info.custoij[caminhao.rota[i]][caminhao.rota[j]];
+            int custoTroca2 = info.custoij[caminhao.rota[i+1]][caminhao.rota[j+1]];
+            int custoRotaj = info.custoij[caminhao.rota[j]][caminhao.rota[j+1]];
 
-            custoTroca1 = info.custoij[caminhao.rota[i]][caminhao.rota[j]];
-            custoTroca2 = info.custoij[caminhao.rota[i+1]][caminhao.rota[j+1]];
+            custoSolucaoMod = caminhao.custoCaminho - custoRotai - custoRotaj + custoTroca1 + custoTroca2;
 
-            custoSolucaoMod = caminhao.custoCaminho - caminhao.custoRota[i] - caminhao.custoRota[j] + custoTroca1 + custoTroca2;
-            
             funcMenorCusto ( menorCusto, custoSolucaoMod, auxI, auxJ, i, j );
 
             if (debugTO){
                 std::cout << "\nInicio: ";
-                std::cout << "[" << i << "][" << i+1 << "] ---- ARCO: " << caminhao.rota[i] << " - " << caminhao.rota[i+1] << " -> Custo: " << caminhao.custoRota[i] << std::endl;
-                std::cout << "\t[" << j << "][" << j+1 << "] ---- ARCO: " << caminhao.rota[j] << " - " << caminhao.rota[j+1] << " -> Custo: " << caminhao.custoRota[j] << std::endl;
+                std::cout << "[" << i << "][" << i+1 << "] ---- ARCO: " << caminhao.rota[i] << " - " << caminhao.rota[i+1] << " -> Custo: " << custoRotai << std::endl;
+                std::cout << "\t[" << j << "][" << j+1 << "] ---- ARCO: " << caminhao.rota[j] << " - " << caminhao.rota[j+1] << " -> Custo: " << custoRotaj << std::endl;
 
                 std::cout << "\nTrocando arcos:\n";
                 std::cout << "\t[" << i << "][" << j << "] ---- ARCO: " << caminhao.rota[i] << " - " << caminhao.rota[j] << " -> Custo: " << info.custoij[caminhao.rota[i]][caminhao.rota[j]] << std::endl;
                 std::cout << "\t[" << i+1 << "][" << j+1 << "] ---- ARCO: " << caminhao.rota[i+1] << " - " << caminhao.rota[j+1] << " -> Custo: " << info.custoij[caminhao.rota[i+1]][caminhao.rota[j+1]] << std::endl;
 
-                std::cout << "\nCalculos: " << caminhao.custoCaminho << " - " << caminhao.custoRota[i] << " - "
-                << caminhao.custoRota[j] << " + " << custoTroca1 << " + " << custoTroca2  << " = " << custoSolucaoMod << std::endl;
+                std::cout << "\nCalculos: " << caminhao.custoCaminho << " - " << custoRotai << " - "
+                << custoRotaj << " + " << custoTroca1 << " + " << custoTroca2  << " = " << custoSolucaoMod << std::endl;
             }
         }
     }
@@ -107,11 +108,6 @@ bool funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao ) {
                 std::cout << element << " ";
             }
 
-            std::cout << "\nElementos custos rota: ";
-            for (const auto& element : caminhao[vic].custoRota) {
-                std::cout << element << " ";
-            }
-            std::cout << std::endl;
         }
 
         // o nosso menor custo, eh o custo total da rota do caminhao, se houver um menor, ele sera trocado.
@@ -157,13 +153,11 @@ bool funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao ) {
 }
 
 // VND 2-opt
-void VNDtwoopt::callVNDTO ( ReadaOut info, Veiculo *caminhao ){
+void VNDtwoopt::callVNDTO ( ReadaOut info, Veiculo *caminhao, bool umCaminhao, int numCaminhao = 0 ){
 
     std::cout << "\n========= Algoritmo VND 2-opt =========" << std::endl;
-    
-    std::cout << "Melhorou antes: " << getTeveMelhora() << std::endl;
 
     setTeveMelhora(funcLoopVeiculo ( info, caminhao ));
     
-    std::cout << "\nMelhorou depois: " << getTeveMelhora() << std::endl;
+    
 }

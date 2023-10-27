@@ -8,10 +8,9 @@ class VNDtwoopt {
         VNDtwoopt ();
         bool getTeveMelhora();
         void setTeveMelhora(bool melhora);  
-        void callVNDTO ( ReadaOut info, Veiculo *caminhao );
+        void callVNDTO ( ReadaOut info, Veiculo *caminhao, bool umCaminhao, int numCaminhao );
     private:
         bool melhora = false;
-        //std::vector< int > novaRota; //teriamos problema O(n) com isso
 };
 
 #endif

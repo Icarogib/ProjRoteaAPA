@@ -41,48 +41,56 @@ int VND(int r, int productTime, Lines lines, int maxTime){
   return s;
 }*/
 
-int Vnd(int r,Guloso gulo, ReadaOut infos, int TempoMinimo, Veiculo cami){
+void Vnd(int r,Guloso gulo, ReadaOut infos, int TempoMinimo, Veiculo cami){
+  
+  int k = 1;
+  int maxTime = TempoMinimo;
 
   VNDswap swap;
   VNDtwoopt opt;
   VNDVSwap vertical;
 
-int k = 1;
-int maxTime = TempoMinimo;
-
-while (k <= r)
-{
-  switch (k)
+  while (k <= r)
   {
-  case 1:
+    switch (k)
+    {
+    case 1:
       cout << "custo antes " << cami.custoCaminho << endl; 
       swap.realizarVND(cami.rota,infos.custoij,cami,infos.demanda);
       maxTime = cami.custoCaminho;
       cout << "Max time: " << maxTime << endl;
+      break;
+
+    case 2:
+      cout << "custo antes " << cami.custoCaminho << endl; 
+      //opt.lixo(cami.rota,infos.custoij,cami,infos.demanda);
+      maxTime = cami.custoCaminho;
+      cout << "Max time: " << maxTime << endl;
+    break;  
+    
+    case 3:
+      cout << "custo antes " << cami.custoCaminho << endl; 
+      //vertical.lixo2(cami.rota,infos.custoij,cami,infos.demanda);
+      maxTime = cami.custoCaminho;
+      cout << "Max time: " << maxTime << endl;
     break;
 
-  case 2:
-  break;  
-  
-  case 3:
-  break;
+    default:
+      break;
+    }
+    
+    if (maxTime < TempoMinimo)
+    {
+      TempoMinimo = maxTime;
+      k = 1;
+    }else{
+      k++;
+      maxTime = TempoMinimo;
+    }
+    
 
-  default:
-    break;
+
   }
-  
-  if (maxTime < TempoMinimo)
-  {
-    TempoMinimo = maxTime;
-    k = 1;
-  }else{
-    k++;
-    maxTime = TempoMinimo;
-  }
-  
-
-
-}
 
 
 
@@ -107,8 +115,8 @@ int main (){
 
   guloso.GulosoFunc( infos, caminhaoGuloso );
 
+/*
   int numeroDeVizinhancas = 3;
-
   for (int i = 0; i < infos.veiculos; i++)
   {
     if (caminhaoGuloso[i].rota.size() <= 0)
@@ -117,11 +125,12 @@ int main (){
         Vnd(numeroDeVizinhancas,guloso, infos, caminhaoGuloso[i].custoCaminho, caminhaoGuloso[i]);
     }
   }
-  
+  */
     
   swapperV.callVNDVswap( infos, caminhaoGuloso ); // ok
+  cout << "lixo" << endl;
 
-  //my2opt.callVNDTO( infos, caminhaoGuloso );
+  //my2opt.callVNDTO( infos, caminhaoGuloso, false, 0 );
   
 
   //susu.realizarVND( caminhaoGuloso[0].rota, infos.custoij, caminhaoGuloso[0], infos.demanda);

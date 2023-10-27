@@ -156,7 +156,6 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
                     veiculo[vic].custoCaminho += menorcusto;   // colocar veiculo custo do caminho dele
                     veiculo[vic].carga -= demandaEntregue;     // carga entregue, zerar demanda em [caminhoProx]
                     veiculo[vic].rota.push_back(caminhoProx);  // coloca na rota do veiculo
-                    veiculo[vic].custoRota.push_back(menorcusto); 
                     infos.demanda[ caminhoProx - 1 ] = 0;      // com a carga entregue, zeramos a demanda
                     entregasFeitas++;                          // soma de entregas no total de todos os veiculos e terceirizacao
                 }
@@ -165,7 +164,6 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
                     veiculo[vic].custoCaminho += menorcusto;   // colocar veiculo custo do caminho dele
                     veiculo[vic].carga -= demandaEntregue;     // carga entregue, zerar demanda em [caminhoProx]
                     veiculo[vic].rota.push_back(caminhoProx);  // coloca na rota do veiculo
-                    veiculo[vic].custoRota.push_back(menorcusto); 
                     infos.demanda[ caminhoProx - 1 ] = 0;      // com a carga entregue, zeramos a demanda
                     entregasFeitas++;                          // soma de entregas no total de todos os veiculos e terceirizacao
             }
@@ -183,7 +181,6 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
             // ========================== Volta do veiculo ==========================
 
             veiculo[vic].custoCaminho += infos.custoij[caminhoProx][0];     //custo caminho para voltar        
-            veiculo[vic].custoRota.push_back(infos.custoij[caminhoProx][0]); 
             veiculo[vic].rota.push_back(0);
             custoTotalCaminho += veiculo[vic].custoCaminho;
             custoTotalVeiculo += infos.custoVeiculo;
@@ -215,13 +212,6 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
                     cout << "    [" << i+1 << "] = " << infos.demanda[i];
             }
 
-            cout << "\nCusto de rota por caminho: ";
-            for( long unsigned int i = 0; i < veiculo[vic].custoRota.size(); i++ ){
-                if (i > 0)
-                    cout << " " << veiculo[vic].custoRota[i] ;
-                else
-                    cout << veiculo[vic].custoRota[i] ;
-            }
             
             cout << "\nEntregas Efetuadas: " << entregasFeitas <<
                     "\n\n==================== FIM RELATORIO VIAGEM ======================" << endl;

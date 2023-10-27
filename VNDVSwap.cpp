@@ -47,13 +47,18 @@ bool funcLoopVSwap ( ReadaOut info, Veiculo *caminhao1, Veiculo *caminhao2 ){
 
             int custoRota1j = info.custoij[ rota1j ][ rotaj ];
             int custoRotaj1 = info.custoij[ rotaj ][ rotaj1];
+            
+            int custorota1ij = info.custoij[rota1i][rotaj];
+            int custorotaji1 = info.custoij[ rotaj ][ rotai1 ];
+            int custorota1ji = info.custoij[rota1j][rotai];
+            int custorotaij1 = info.custoij[ rotai ][ rotaj1 ];
 
             // calcula o custo se trocar aqueles dois pontos
             custoTrocaCaminhao1 = caminhao1->custoCaminho - custoRota1i - custoRotai1  
-                                + info.custoij[rota1i][rotaj] + info.custoij[ rotaj ][ rotai1 ];
+                                + custorota1ij + custorotaji1;
 
-            custoTrocaCaminhao2 = caminhao2->custoCaminho - custoRota1j - custoRotaj1 + info.custoij[rota1j][rotai] 
-                                + info.custoij[ rotai ][ rotaj1 ];
+            custoTrocaCaminhao2 = caminhao2->custoCaminho - custoRota1j - custoRotaj1 + custorota1ji
+                                + custorotaij1;
 
             if ( debugVSp ){
                 std::cout << "\nRota2 [" << j << "]: " << rotaj << std::endl;
@@ -62,26 +67,26 @@ bool funcLoopVSwap ( ReadaOut info, Veiculo *caminhao1, Veiculo *caminhao2 ){
 
                 std::cout << "\n1 - Trocando [" << rotai << "] com [" << rotaj << "] - Nova aresta veiculo 1: "
                         << rota1i << " -> " << rotaj << " -> " << rotai1 << "\nCusto: "
-                        << rota1i << " -> " << rotaj << " = " << info.custoij[rota1i][rotaj] 
-                        << "\t e Custo: " << rotaj << " -> " << rotai1 << " = " << info.custoij[ rotaj ][ rotai1 ] 
+                        << rota1i << " -> " << rotaj << " = " << custorota1ij
+                        << "\t e Custo: " << rotaj << " -> " << rotai1 << " = " << custorotaji1
                         << std::endl;
 
                 std::cout << "\n2 - Trocando [" << rotaj << "] com [" << rotai << "] - Nova aresta veiculo 2: "
                         << rota1j << " -> " << rotai << " -> " << rotaj1 << "\nCusto: "
-                        << rota1j << " -> " << rotai << " = " << info.custoij[rota1j][rotai] 
-                        << "\t e Custo: " << rotai << " -> " << rotaj1 << " = " << info.custoij[ rotai ][ rotaj1 ] 
+                        << rota1j << " -> " << rotai << " = " << custorota1ji
+                        << "\t e Custo: " << rotai << " -> " << rotaj1 << " = " << custorotaij1 
                         << std::endl;
 
                         std::cout << "\nCalculos Caminhao 1: " << caminhao1->custoCaminho << 
                         " - " << custoRota1i << " - " << custoRotai1 << 
-                        " + " << info.custoij[rota1i][rotaj]  << 
-                        " + " << info.custoij[ rotaj ][ rotai1 ] << " = " << custoTrocaCaminhao1
+                        " + " << custorota1ij  << 
+                        " + " << custorotaji1 << " = " << custoTrocaCaminhao1
                               << std::endl;
 
                         std::cout << "\nCalculos Caminhao 2: " << caminhao2->custoCaminho << 
                         " - " << custoRota1j << " - " << custoRotaj1 << 
-                        " + " << info.custoij[rota1j][rotai]  <<
-                        " + " << info.custoij[ rotai ][ rotaj1 ] << " = " << custoTrocaCaminhao2 <<
+                        " + " << custorota1ji  <<
+                        " + " << custorotaij1 << " = " << custoTrocaCaminhao2 <<
                         "\n====================================" << std::endl;
             }
         
