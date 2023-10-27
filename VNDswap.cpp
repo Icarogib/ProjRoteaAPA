@@ -33,19 +33,19 @@ bool VNDswap::realizarSwap( std::vector<int> &rota, int i, int j, const std::vec
             + custoij[rota[i-1]][rota[j]] + custoij[rota[j]][rota[i+1]] 
             + custoij[rota[j-1]][rota[i]] + custoij[rota[i]][rota[j+1]];
 
-    std::cout << "\ncalculo = " << custorotatotal << " - " << custoij[rota[i-1]][rota[i]] << " - " << custoij[rota[i]][rota[i+1]]
-            << " - " << custoij[rota[j-1]][rota[j]] << " - " << custoij[rota[j]][rota[j+1]] << 
-            " + " << custoij[rota[i-1]][rota[j]] << " + " << custoij[rota[j]][rota[i+1]] <<
-            " + " << custoij[rota[j-1]][rota[i]] << " + " << custoij[rota[i]][rota[j+1]];
+    // std::cout << "\ncalculo = " << custorotatotal << " - " << custoij[rota[i-1]][rota[i]] << " - " << custoij[rota[i]][rota[i+1]]
+    //         << " - " << custoij[rota[j-1]][rota[j]] << " - " << custoij[rota[j]][rota[j+1]] << 
+    //         " + " << custoij[rota[i-1]][rota[j]] << " + " << custoij[rota[j]][rota[i+1]] <<
+    //         " + " << custoij[rota[j-1]][rota[i]] << " + " << custoij[rota[i]][rota[j+1]];
 
 
-    std::cout << "\nCustoIcaro: " << custo1 ;
+    // std::cout << "\nCustoIcaro: " << custo1 ;
 
     std::vector<int> rotaOriginal = rota; // Salva a rota original para desfazer a troca se necessário
     std::reverse(rota.begin() + i, rota.begin() + j + 1);
     int novoCusto = calcularCustoRota(rota, custoij );
 
-    std::cout << " - CustoEdu: " << novoCusto << std::endl;
+    //std::cout << " - CustoEdu: " << novoCusto << std::endl;
 
     if ( novoCusto < calcularCustoRota(rotaOriginal, custoij ))
     {

@@ -7,7 +7,7 @@ class Guloso {
     public:
         Guloso();
 
-        void GulosoFunc ( ReadaOut info, Veiculo *veiculo );
+        void GulosoFunc ( ReadaOut info, Veiculo *veiculo , float alpha);
 
 };
 
