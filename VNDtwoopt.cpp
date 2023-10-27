@@ -6,6 +6,13 @@ VNDtwoopt::VNDtwoopt() {
     //inicializacao
 }
 
+    bool VNDtwoopt::getTeveMelhora(){
+        return melhora;
+    }
+    void VNDtwoopt::setTeveMelhora(bool melhora){
+        melhora = true;
+    }
+
 void funcTrocaRota ( Veiculo *caminhao, int auxI, int auxJ ) {
     int j = auxJ;
 

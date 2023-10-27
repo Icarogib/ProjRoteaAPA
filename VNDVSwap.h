@@ -6,9 +6,11 @@
 class VNDVSwap{
     public:
         VNDVSwap ();
-
+        bool getTeveMelhora();
+        void setTeveMelhora(bool melhora);  
         void callVNDVswap ( ReadaOut info, Veiculo *veiculos );
-
+    private:
+    bool melhora = false;
 };
 
 #endif

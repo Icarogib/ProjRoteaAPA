@@ -7,6 +7,13 @@ VNDVSwap::VNDVSwap() {
     //inicializacao
 }
 
+bool VNDVSwap::getTeveMelhora(){
+    return melhora;
+}
+void VNDVSwap::setTeveMelhora(bool m){
+    melhora = true;
+}
+
 bool funcLoopVSwap ( ReadaOut info, Veiculo *caminhao1, Veiculo *caminhao2 ){
 
     int custoTrocaCaminhao1, custoTrocaCaminhao2;
