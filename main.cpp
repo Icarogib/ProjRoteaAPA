@@ -127,11 +127,48 @@ int main (){
   }
   */
     
-  swapperV.callVNDVswap( infos, caminhaoGuloso ); // ok
-  cout << "lixo" << endl;
+  // swapperV.callVNDVswap( infos, caminhaoGuloso ); // ok
+cout << "1lixo" << endl;
+  for (int vic = 0; vic < infos.veiculos; vic++){
 
-  //my2opt.callVNDTO( infos, caminhaoGuloso, false, 0 );
-  
+        if( caminhaoGuloso[vic].rota.size() ){
+            
+                cout << "\nVeiculo [" << vic+1 << "]: ";
+        
+            for( long unsigned int i = 1; i < caminhaoGuloso[vic].rota.size() - 1; i++ ){
+                if (i > 1){
+                    cout << " " << caminhaoGuloso[vic].rota[i];
+                }
+                else
+                    cout << caminhaoGuloso[vic].rota[i] ;
+            }
+                cout << " - custo da rota: " << caminhaoGuloso[vic].custoCaminho;
+
+            cout << endl;
+        }
+    }
+
+  my2opt.callVNDTO( infos, caminhaoGuloso, false, 0 );
+  cout << "2lixo" << endl;
+
+    for (int vic = 0; vic < infos.veiculos; vic++){
+
+        if( caminhaoGuloso[vic].rota.size() ){
+            
+                cout << "\nVeiculo [" << vic+1 << "]: ";
+        
+            for( long unsigned int i = 1; i < caminhaoGuloso[vic].rota.size() - 1; i++ ){
+                if (i > 1){
+                    cout << " " << caminhaoGuloso[vic].rota[i];
+                }
+                else
+                    cout << caminhaoGuloso[vic].rota[i] ;
+            }
+                cout << " - custo da rota: " << caminhaoGuloso[vic].custoCaminho;
+
+            cout << endl;
+        }
+    }
 
   //susu.realizarVND( caminhaoGuloso[0].rota, infos.custoij, caminhaoGuloso[0], infos.demanda);
   

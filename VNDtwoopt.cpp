@@ -83,12 +83,51 @@ void funcLoopJanela ( ReadaOut info, Veiculo caminhao, int *menorCusto, int *aux
         std::cout << "\n===========================================\n" << std::endl;
 }
 
+bool fazCompJanela( ReadaOut info, Veiculo *caminhao, int vic, int menorCusto, int auxI, int auxJ ){
+
+        if ( caminhao[vic].custoCaminho == menorCusto ){
+            std::cout << "\nNao houve alteracao para o veiculo [" << vic + 1 << "]\n" << "\n===============================" << std::endl;
+            return false;
+        }else{
+            std::cout << "\nO custo para o caminhao [" << vic+1 << "] era: " << caminhao[vic].custoCaminho << "\nE agora o custo passou a ser: " << menorCusto 
+            << "\n\nTrocando as rotas: [" << auxI << "]=" << caminhao[vic].rota[auxI] << " e [" << auxJ << "]=" << caminhao[vic].rota[auxJ] << " de lugar.\n" 
+            << "\n=======================================" << std::endl;
+            
+            if(debugTO){
+                std::cout << "\nantiga rota: ";
+                for (const auto& element : caminhao[vic].rota) {
+                    std::cout << element << " ";
+                }
+                std::cout << " - Custo: " << caminhao[vic].custoCaminho << std::endl;
+            }
+            
+            funcTrocaRota ( &caminhao[vic], auxI, auxJ );
+            caminhao[vic].custoCaminho = menorCusto;
+
+            if(debugTO){
+                std::cout << "\nnova rota:   ";
+                for (const auto& element : caminhao[vic].rota) {
+                    std::cout << element << " ";
+                }
+                std::cout << " - Custo: " << caminhao[vic].custoCaminho << std::endl;
+                std::cout << "\n========= Fim 2-opt para veiculo [" << vic+1 << "] =========" << std::endl;
+            }
+
+            return true;
+
+        }
+}
+
+
 // funcao rodara o algoritmo para a quantidade n de  veiculos.
-bool funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao ) {
+bool funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao, bool umCaminhao, int numCaminhao = 0) {
     bool melhorou = false;
     int menorCusto, auxI, auxJ;
 
-    for (int vic = 0; vic < info.veiculos; vic++){
+        // PARA TODOS CAMINHOES
+    if ( !umCaminhao ){
+        std::cout << "infintosmcai!!!" << std::endl;
+        for (int vic = 0; vic < info.veiculos; vic++){
         
         // se nao possuir uma rota maior que o minimo necessario, encerrara
         if ( caminhao[vic].rota.size() < 6 ){
@@ -116,38 +155,25 @@ bool funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao ) {
         // funcao que anda e aumenta a janela, a partir de 4 posicoes para aquele veiculo
         funcLoopJanela ( info, caminhao[vic], &menorCusto, &auxI, &auxJ );
         
+        melhorou = fazCompJanela( info, caminhao, vic, menorCusto, auxI, auxJ );
 
-        if ( caminhao[vic].custoCaminho == menorCusto ){
-            std::cout << "\nNao houve alteracao para o veiculo [" << vic + 1 << "]\n" << "\n===============================" << std::endl;
-            //melhorou = false;
-        }else{
-            std::cout << "\nO custo para o caminhao [" << vic+1 << "] era: " << caminhao[vic].custoCaminho << "\nE agora o custo passou a ser: " << menorCusto 
-            << "\n\nTrocando as rotas: [" << auxI << "]=" << caminhao[vic].rota[auxI] << " e [" << auxJ << "]=" << caminhao[vic].rota[auxJ] << " de lugar.\n" 
-            << "\n=======================================" << std::endl;
-            
-            if(debugTO){
-                std::cout << "\nantiga rota: ";
-                for (const auto& element : caminhao[vic].rota) {
-                    std::cout << element << " ";
-                }
-                std::cout << " - Custo: " << caminhao[vic].custoCaminho << std::endl;
-            }
-            
-            funcTrocaRota ( &caminhao[vic], auxI, auxJ );
-            caminhao[vic].custoCaminho = menorCusto;
-
-            if(debugTO){
-                std::cout << "\nnova rota:   ";
-                for (const auto& element : caminhao[vic].rota) {
-                    std::cout << element << " ";
-                }
-                std::cout << " - Custo: " << caminhao[vic].custoCaminho << std::endl;
-            }
-                std::cout << "\n========= Fim 2-opt para veiculo [" << vic+1 << "] =========" << std::endl;
-
-            melhorou = true;
-
+    }
+    }   // PARA UM CAMINHAO
+    else {
+        std::cout << "UMCAMINHAO!!!" << std::endl;
+        if ( caminhao[numCaminhao].rota.size() < 6 || !caminhao[numCaminhao].rota.size()){
+        std::cout << "\nRota do caminhao [" << numCaminhao + 1 <<  "] nao pode ser utilizada, pois eh menor que o numero minimo!" << 
+        "\nLogo, outros caminhoes nao serao capazes de rodar tambem" << std::endl;
+            return melhorou;
         }
+
+        // o nosso menor custo, eh o custo total da rota do caminhao, se houver um menor, ele sera trocado.
+        menorCusto = caminhao[numCaminhao].custoCaminho;
+        
+        // funcao que anda e aumenta a janela, a partir de 4 posicoes para aquele veiculo
+        funcLoopJanela ( info, caminhao[numCaminhao], &menorCusto, &auxI, &auxJ );
+
+        melhorou = fazCompJanela( info, caminhao, numCaminhao, menorCusto, auxI, auxJ );
     }
     return melhorou;
 }
@@ -157,7 +183,6 @@ void VNDtwoopt::callVNDTO ( ReadaOut info, Veiculo *caminhao, bool umCaminhao, i
 
     std::cout << "\n========= Algoritmo VND 2-opt =========" << std::endl;
 
-    setTeveMelhora(funcLoopVeiculo ( info, caminhao ));
-    
+    setTeveMelhora(funcLoopVeiculo ( info, caminhao, true, 1 ));
     
 }
