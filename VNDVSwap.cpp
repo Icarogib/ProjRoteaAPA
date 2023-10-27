@@ -11,7 +11,7 @@ bool VNDVSwap::getTeveMelhora(){
     return melhora;
 }
 void VNDVSwap::setTeveMelhora(bool m){
-    melhora = true;
+    melhora = m;
 }
 
 bool funcLoopVSwap ( ReadaOut info, Veiculo *caminhao1, Veiculo *caminhao2 ){
@@ -152,38 +152,72 @@ bool funcLoopVSwap ( ReadaOut info, Veiculo *caminhao1, Veiculo *caminhao2 ){
     return false;
 }
 
-void funcLoopVeiculos ( ReadaOut info, Veiculo *veiculo ) {
+bool funcLoopVeiculos ( ReadaOut info, Veiculo *veiculo, bool umCaminhao, int numCaminhao ) {
     bool melhorou = false;
     //recursividade? eh possivel?
-    for ( int vic1 = 0; vic1 < info.veiculos; vic1++ ){
-        
+
+    // TODOS CAMINHOES!
+    if( !umCaminhao ){
+        //std::cout << "MUITCHOS MIQUIAO" << std::endl;
+        for ( int vic1 = 0; vic1 < info.veiculos; vic1++ ){
+            
+            if(debugMin)
+                std::cout << "\n";
+
+            if(!veiculo[vic1].rota.size())
+                break;
+
+            for ( int vic2 = vic1 + 1; vic2 < info.veiculos; vic2++ ){
+
+                if( !veiculo[vic2].rota.size() )
+                    break;
+
+                if(debugMin){
+                    std::cout << "\n\nCaminhoes: [" << vic1+1 << "][" << vic2+1 << "]";
+                }
+
+                melhorou = funcLoopVSwap ( info, &veiculo[vic1], &veiculo[vic2] );
+
+                if (melhorou){
+                    std::cout << "\nTrocando rotas entre veiculos [" << vic1+1 << "] e [" << vic2 +1<< "]" << std::endl;
+                }
+            }
+        }
+    } // UM CAMINHAO
+    else {
+        //std::cout << "UM MIQUIAO" << std::endl;
+        if(!veiculo[numCaminhao].rota.size())
+                return false;
+
         if(debugMin)
             std::cout << "\n";
 
-        if(!veiculo[vic1].rota.size())
-            break;
-
-        for ( int vic2 = vic1 + 1; vic2 < info.veiculos; vic2++ ){
+        for ( int vic2 = 0; vic2 < info.veiculos; vic2++ ){
 
             if( !veiculo[vic2].rota.size() )
                 break;
 
+            if ( vic2 == numCaminhao )
+                continue;
+
             if(debugMin){
-                std::cout << "\n\nCaminhoes: [" << vic1+1 << "][" << vic2+1 << "]";
+                std::cout << "\n\nCaminhoes: [" << numCaminhao + 1 << "][" << vic2+1 << "]";
             }
 
-            melhorou = funcLoopVSwap ( info, &veiculo[vic1], &veiculo[vic2] );
+            melhorou = funcLoopVSwap ( info, &veiculo[numCaminhao], &veiculo[vic2] );
 
             if (melhorou){
-                std::cout << "\nTrocando rotas entre veiculos [" << vic1 << "] e [" << vic2 << "]" << std::endl;
+                std::cout << "\nTrocando rotas entre veiculos [" << numCaminhao+1 << "] e [" << vic2+1 << "]" << std::endl;
             }
         }
+    
     }
+    return melhorou;
 }
 
-void VNDVSwap::callVNDVswap ( ReadaOut info, Veiculo *veiculos ){
+void VNDVSwap::callVNDVswap ( ReadaOut info, Veiculo *veiculos, bool umCaminhao, int numCaminhao = 0 ){
     int pior, menospior;
 
-    funcLoopVeiculos ( info, veiculos );
+    setTeveMelhora(funcLoopVeiculos ( info, veiculos, umCaminhao, numCaminhao ));
     
 }

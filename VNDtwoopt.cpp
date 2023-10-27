@@ -126,7 +126,7 @@ bool funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao, bool umCaminhao, int nu
 
         // PARA TODOS CAMINHOES
     if ( !umCaminhao ){
-        std::cout << "infintosmcai!!!" << std::endl;
+        //std::cout << "infintosmcai!!!" << std::endl;
         for (int vic = 0; vic < info.veiculos; vic++){
         
         // se nao possuir uma rota maior que o minimo necessario, encerrara
@@ -160,7 +160,7 @@ bool funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao, bool umCaminhao, int nu
     }
     }   // PARA UM CAMINHAO
     else {
-        std::cout << "UMCAMINHAO!!!" << std::endl;
+        //std::cout << "UMCAMINHAO!!!" << std::endl;
         if ( caminhao[numCaminhao].rota.size() < 6 || !caminhao[numCaminhao].rota.size()){
         std::cout << "\nRota do caminhao [" << numCaminhao + 1 <<  "] nao pode ser utilizada, pois eh menor que o numero minimo!" << 
         "\nLogo, outros caminhoes nao serao capazes de rodar tambem" << std::endl;
@@ -183,6 +183,6 @@ void VNDtwoopt::callVNDTO ( ReadaOut info, Veiculo *caminhao, bool umCaminhao, i
 
     std::cout << "\n========= Algoritmo VND 2-opt =========" << std::endl;
 
-    setTeveMelhora(funcLoopVeiculo ( info, caminhao, true, 1 ));
+    setTeveMelhora(funcLoopVeiculo ( info, caminhao, umCaminhao, numCaminhao ));
     
 }

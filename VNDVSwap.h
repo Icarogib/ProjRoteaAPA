@@ -8,7 +8,7 @@ class VNDVSwap{
         VNDVSwap ();
         bool getTeveMelhora();
         void setTeveMelhora(bool melhora);  
-        void callVNDVswap ( ReadaOut info, Veiculo *veiculos );
+        void callVNDVswap ( ReadaOut info, Veiculo *veiculos, bool umCaminhao, int numCaminhao );
     private:
     bool melhora = false;
 };
