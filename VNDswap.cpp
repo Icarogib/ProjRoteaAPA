@@ -4,12 +4,12 @@ VNDswap::VNDswap(){
     melhora = false;
 }
 
-    bool VNDswap::getTeveMelhora(){
-        return melhora;
-    }
-    void VNDswap::setTeveMelhora(bool melhora){
-        melhora = true;
-    }
+bool VNDswap::getTeveMelhora(){
+    return melhora;
+}
+void VNDswap::setTeveMelhora(bool m){
+    melhora = m;
+}
 
 // Implementação da função para calcular o custo da rota
 int VNDswap::calcularCustoRota( const std::vector<int>& rota, const std::vector<std::vector<int> >& custoij ) {
@@ -76,20 +76,24 @@ void VNDswap::realizarVND(std::vector<int>& rotaVeiculo, std::vector<std::vector
                     melhoriaEncontrada = true;
                     VNDswap::setTeveMelhora(melhoriaEncontrada);
                     std::cout << "melhoria encontrada, trocando os valores" << std::endl;
+                    break;
                 } else {
                     // Desfaz o swap se não atender aos critérios
                     realizarSwap(rotaVeiculo, i, j, custoij);
-                }
-                
+                } 
             }
+
+                if(melhoriaEncontrada)
+                    break;
+                    
         }
             
     }
-    
-                   std::cout << "\nnova rota:   ";
-                for (const auto& element : veiculo.rota) {
-                    std::cout << element << " ";
-                    
-                }
-            std::cout << "novo custo: " << veiculo.custoCaminho << std::endl;
+
+    std::cout << "\nnova rota:   ";
+    for (const auto& element : veiculo.rota) {
+        std::cout << element << " ";
+        
+    }
+    std::cout << "novo custo: " << veiculo.custoCaminho << std::endl;
 }

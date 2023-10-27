@@ -6,12 +6,12 @@ VNDtwoopt::VNDtwoopt() {
     //inicializacao
 }
 
-    bool VNDtwoopt::getTeveMelhora(){
-        return melhora;
-    }
-    void VNDtwoopt::setTeveMelhora(bool melhora){
-        melhora = true;
-    }
+bool VNDtwoopt::getTeveMelhora(){
+    return melhora;
+}
+void VNDtwoopt::setTeveMelhora(bool m){
+    melhora = m;
+}
 
 void funcTrocaRota ( Veiculo *caminhao, int auxI, int auxJ ) {
     int j = auxJ;
@@ -83,8 +83,8 @@ void funcLoopJanela ( ReadaOut info, Veiculo caminhao, int *menorCusto, int *aux
 }
 
 // funcao rodara o algoritmo para a quantidade n de  veiculos.
-void funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao ) {
-    
+bool funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao ) {
+    bool melhorou = false;
     int menorCusto, auxI, auxJ;
 
     for (int vic = 0; vic < info.veiculos; vic++){
@@ -95,7 +95,7 @@ void funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao ) {
             "\nLogo, outros caminhoes nao serao capazes de rodar tambem" << std::endl;
             
             if( !caminhao[vic].rota.size() )
-                return;
+                break;
 
             continue;
         }
@@ -123,6 +123,7 @@ void funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao ) {
 
         if ( caminhao[vic].custoCaminho == menorCusto ){
             std::cout << "\nNao houve alteracao para o veiculo [" << vic + 1 << "]\n" << "\n===============================" << std::endl;
+            //melhorou = false;
         }else{
             std::cout << "\nO custo para o caminhao [" << vic+1 << "] era: " << caminhao[vic].custoCaminho << "\nE agora o custo passou a ser: " << menorCusto 
             << "\n\nTrocando as rotas: [" << auxI << "]=" << caminhao[vic].rota[auxI] << " e [" << auxJ << "]=" << caminhao[vic].rota[auxJ] << " de lugar.\n" 
@@ -145,18 +146,24 @@ void funcLoopVeiculo ( ReadaOut info, Veiculo *caminhao ) {
                     std::cout << element << " ";
                 }
                 std::cout << " - Custo: " << caminhao[vic].custoCaminho << std::endl;
-                std::cout << "\n========= Fim 2-opt para veiculo [" << vic+1 << "] =========" << std::endl;
             }
+                std::cout << "\n========= Fim 2-opt para veiculo [" << vic+1 << "] =========" << std::endl;
+
+            melhorou = true;
 
         }
     }
+    return melhorou;
 }
 
 // VND 2-opt
 void VNDtwoopt::callVNDTO ( ReadaOut info, Veiculo *caminhao ){
 
     std::cout << "\n========= Algoritmo VND 2-opt =========" << std::endl;
-
-    funcLoopVeiculo ( info, caminhao );
     
+    std::cout << "Melhorou antes: " << getTeveMelhora() << std::endl;
+
+    setTeveMelhora(funcLoopVeiculo ( info, caminhao ));
+    
+    std::cout << "\nMelhorou depois: " << getTeveMelhora() << std::endl;
 }
