@@ -271,6 +271,6 @@ int main (){
   //susu.realizarVND( caminhaoGuloso[0].rota, infos.custoij, caminhaoGuloso[0], infos.demanda);
   
   //cout << "\ncustocaminho vic 0: " << caminhaoGuloso[0].custoCaminho << endl;
-  terc.thirdParty();
+  //terc.thirdParty();
 	return 0;
 }
