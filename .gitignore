@@ -13,6 +13,10 @@ testeVNDListAdj
 testeVNDListAdj.o
 main.o
 testemain
+testemain.exe
+teste01.exe
+mainner.exe
+testeVNDlistAdj.exe
 VNDtwoopt.o
 VNDswap.o
 VNDVSwap.o

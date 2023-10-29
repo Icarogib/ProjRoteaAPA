@@ -1,7 +1,8 @@
 #include "Guloso.h"
 
 bool debugloso = false;
-bool enableTerceirizacao = true;
+//bool enableTerceirizacao = false;
+bool debugmeta = false;
 
 using namespace std;
 
@@ -22,6 +23,7 @@ void terceirizaFunc ( bool &terc1, int &custoTotalTerceirizado, int custoTerceir
     // mostra que passou pela terceirizacao e soma o custo da terceirizacao
     terc1 = true;
     custoTotalTerceirizado += custoTerceirizar;
+    cout << "\n CustoTotalTerceirizado: " << custoTotalTerceirizado << endl;
     
     if (debugloso)
         cout << "^terceiriza" << endl;
@@ -33,14 +35,25 @@ void terceirizaFunc ( bool &terc1, int &custoTotalTerceirizado, int custoTerceir
     entregasFeitas++;               
 }
 
-void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){	
+void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo, float alpha, bool enableTerceirizacao, vector<int> &terceirizados, int &custoTotalTerceirizado){	
     //ReadaOut infos;
+
     
-    int vic, caminhoAtual, custoAtual, custoTotal, custoTotalCaminho, custoTotalVeiculo, custoTotalTerceirizado,
-    menorcusto, caminhoProx, cargaTotal, demandaJ, demandaEntregue, menorDemanda, custoTerceirizar, entregaVeiculo, maiorDemanda;
+    
+    int vic, caminhoAtual, custoAtual, custoTotal, custoTotalCaminho, custoTotalVeiculo,
+    menorcusto, caminhoProx, cargaTotal, demandaJ, demandaEntregue, menorDemanda, custoTerceirizar, entregaVeiculo, maiorDemanda, maiorCusto, maxLCR, aleatorio;
+    
     
     long unsigned int entregasFeitas;
-    vector<int> terceirizados;
+    //vector<int> terceirizados;
+    vector<int> LCR;
+    vector<int> LCRindex;
+    bool consegueEntregar = false;
+    
+    
+    
+    
+    
     
     // inicializando com 0
     custoTotal = custoTotalVeiculo = custoTotalCaminho = custoTotalTerceirizado = entregasFeitas = entregaVeiculo  = 0 ;
@@ -116,13 +129,13 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
                 }
 
 
-                if(enableTerceirizacao){
-                    if ( caminhoAtual && entregaVeiculo >= infos.limiteMinEnt && 
-                            custoTerceirizar < (custoAtual + infos.custoij[j][0]) )
+                // if(enableTerceirizacao){
+                //     if ( caminhoAtual && entregaVeiculo >= infos.limiteMinEnt && 
+                //             custoTerceirizar < (custoAtual + infos.custoij[j][0]) )
 
-                        terceirizaFunc( terc1, custoTotalTerceirizado, custoTerceirizar, j,
-                                        terceirizados, infos, demandaJ, entregasFeitas );
-                }
+                //         terceirizaFunc( terc1, custoTotalTerceirizado, custoTerceirizar, j,
+                //                         terceirizados, infos, demandaJ, entregasFeitas );
+                // }
 
                 if( custoAtual < menorcusto && demandaJ <= veiculo[vic].carga ){  // se for menor que o menor custo anterior e se o veiculo puder
                                                                                                             //   entregar a carga naquele pont
@@ -132,6 +145,95 @@ void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){
                 }
                 
             }
+
+            maiorCusto = *max_element(infos.custoij[caminhoAtual].begin(), infos.custoij[caminhoAtual].end());
+            maxLCR = alpha*(maiorCusto - menorcusto);
+            if(debugmeta){
+                cout << "Fazendo o maior valor para o LCR: " << endl;
+                cout << "Conta: alpha(" << alpha << ") * (maiorcusto["<< maiorCusto << "] - menorcusto[" << menorcusto << "])" << endl;
+                cout << "MaxLCR: " << maxLCR << endl; 
+                cout << "Criando array do LCR : " << endl;
+            }
+
+            for (int i = 1; i < infos.custoij.size(); i++){
+                if(infos.custoij[caminhoAtual][i] <= maxLCR && i != caminhoAtual && infos.demanda[i-1] != 0 && (veiculo[vic].carga - demandaEntregue)  >= infos.demanda[i-1]){
+                    LCR.push_back(infos.custoij[caminhoAtual][i]);
+                    LCRindex.push_back(i);
+                }
+            }
+
+            for (int i = 0 ; i < LCRindex.size(); i++){
+                if(veiculo[vic].carga >= infos.demanda[LCRindex[i]]){
+                    consegueEntregar = true;
+                    break;
+                }
+            }
+
+
+
+            if(debugmeta){
+                cout << "LCR : ";
+                for (auto &c : LCR){
+                    cout << "[" << c << "]";
+                }
+                cout << "\nLCRindex :";
+                for (auto &c : LCRindex){
+                    cout << "[" << c << "]";
+                }
+                cout << "\n";
+
+                
+            }
+
+            //uniform_int_distribution<int> distribution(menorcusto, LCR.size());
+
+
+            while(menorDemanda && menorDemanda <= veiculo[vic].carga && entregasFeitas != ( infos.demanda.size() ) && !LCR.empty() && consegueEntregar){
+                aleatorio = rand () % LCR.size();
+                //Sleep(250);
+                
+                //cout <<" " << aleatorio;
+                
+
+                
+
+                demandaJ = infos.demanda[LCRindex[aleatorio]-1];
+
+                if (!demandaJ || !LCR[aleatorio])
+                    continue;
+                
+                if ( demandaJ > maiorDemanda )
+                    maiorDemanda = demandaJ;
+
+                if ( demandaJ && demandaJ < menorDemanda )
+                    menorDemanda = demandaJ;
+
+                if(enableTerceirizacao){
+                    if ( caminhoAtual && entregaVeiculo >= infos.limiteMinEnt && 
+                            custoTerceirizar < (LCR[aleatorio] + infos.custoij[LCRindex[aleatorio]][0]) )
+
+                        terceirizaFunc( terc1, custoTotalTerceirizado, custoTerceirizar, LCRindex[aleatorio],
+                                        terceirizados, infos, demandaJ, entregasFeitas );
+                }
+
+                if(find(veiculo[vic].rota.begin(), veiculo[vic].rota.end(), LCRindex[aleatorio]) == veiculo[vic].rota.end() && demandaJ <= veiculo[vic].carga ){  // se for menor que o menor custo anterior e se o veiculo puder
+                    if(debugmeta)
+                        cout << "Selecionando aleatoriamente: " << aleatorio << endl;
+                        
+                    menorcusto = LCR[aleatorio];
+                    caminhoProx = LCRindex[aleatorio];
+                    demandaEntregue = demandaJ;
+                    break;                                                                                 //   entregar a carga naquele pont
+                }
+            }
+
+            
+            
+            
+            
+
+            LCR.clear();
+            LCRindex.clear();
 
             // ========================== FIM Loop dos pontos ==========================
 
