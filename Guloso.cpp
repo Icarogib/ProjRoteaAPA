@@ -33,14 +33,14 @@ void terceirizaFunc ( bool &terc1, int &custoTotalTerceirizado, int custoTerceir
     entregasFeitas++;               
 }
 
-void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo ){	
+void Guloso::GulosoFunc ( ReadaOut infos, Veiculo *veiculo, bool enableTerceirizacao, vector<int> &terceirizados, int &custoTotalTerceirizado){	
     //ReadaOut infos;
     
-    int vic, caminhoAtual, custoAtual, custoTotal, custoTotalCaminho, custoTotalVeiculo, custoTotalTerceirizado,
+    int vic, caminhoAtual, custoAtual, custoTotal, custoTotalCaminho, custoTotalVeiculo,
     menorcusto, caminhoProx, cargaTotal, demandaJ, demandaEntregue, menorDemanda, custoTerceirizar, entregaVeiculo, maiorDemanda;
     
     long unsigned int entregasFeitas;
-    vector<int> terceirizados;
+    //vector<int> terceirizados;
     
     // inicializando com 0
     custoTotal = custoTotalVeiculo = custoTotalCaminho = custoTotalTerceirizado = entregasFeitas = entregaVeiculo  = 0 ;
