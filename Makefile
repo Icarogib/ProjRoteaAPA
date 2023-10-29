@@ -5,10 +5,10 @@ CFLAGS = -Wall -g
 
 # ================     Main     ================
 
-main: main.o ReadaOut.o Veiculo.o Guloso.o VNDtwoopt.o VNDswap.o VNDVSwap.o
+main: main.o ReadaOut.o Veiculo.o Guloso.o VNDtwoopt.o VNDswap.o VNDVSwap.o ThirdParty.o
 	$(CC) $(CFLAGS) -o mainner main.o ReadaOut.o Veiculo.o Guloso.o VNDtwoopt.o VNDswap.o VNDVSwap.o
 
-main.o: main.cpp ReadaOut.h Veiculo.h Guloso.h VNDtwoopt.h VNDswap.h VNDVSwap.h
+main.o: main.cpp ReadaOut.h Veiculo.h Guloso.h VNDtwoopt.h VNDswap.h VNDVSwap.h ThirdParty.h
 	$(CC) $(CFLAGS) -c main.cpp
 
 # ================ Terceirizacao ================

@@ -1,10 +1,12 @@
 //logica: se os dois menores custos somados do vertice for menor que o de terceirização, é melhor terceirizar kkkkkkkkkkkk n sei se faz sentido-
-#include "Veiculo.h"
-#include <bits/stdc++.h>
-
+#include "ThirdParty.h"
 using namespace std;
 
-int main(){
+ThirdParty::ThirdParty(){
+    
+}
+
+void ThirdParty::thirdParty(){
     ReadaOut infos;
     int menor1, menor2 = INT_MAX;
     int soma = 0;
@@ -47,7 +49,5 @@ int main(){
         if (somas[i] > infos.custoTerc[i]){
             cout << "local [" << i+1 << "] " << "tem o custo de entrada e saida maior que o de terceirizar, portanto pode ser melhor terceiriza-lo" << endl;
         }
-    }
-    
-    return 0;
+    }  
 }
