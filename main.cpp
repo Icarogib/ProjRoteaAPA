@@ -210,7 +210,7 @@ void tabelaFinalArq(ReadaOut infos, Veiculo *caminhaoGuloso, bool enableTerceiri
 
 
 
-int main (){	
+int main ( int argc, char** argv ){	
 
 
   Guloso guloso;
@@ -224,6 +224,7 @@ int main (){
   string pasta = "instancias/";
   bool ehUmCaminhao = true;
 
+
   //FOR PARA PEGAR OS VALORES DA TABELA para as varias instancias
   // for (const auto& arquivo: fs::directory_iterator(pasta)){
 
@@ -231,7 +232,7 @@ int main (){
   
   
       ReadaOut infos;
-      infos.lerValor( "n31k5_A.txt" );
+      infos.lerValor( argv[1] );
       Veiculo caminhaoGuloso[ infos.veiculos ];
 
       auto start_time = chrono::high_resolution_clock::now();
@@ -257,8 +258,7 @@ int main (){
       cout << "\nApos VND: " << endl;
 
       tabelaFinal(infos, caminhaoGuloso, enableTerceirizacao, terceirizados, custoTotalTerceirizado);
-
-      tabelaFinalArq(infos, caminhaoGuloso, enableTerceirizacao, terceirizados, custoTotalTerceirizado, "resultado.txt");
+      tabelaFinalArq(infos, caminhaoGuloso, enableTerceirizacao, terceirizados, custoTotalTerceirizado, argv[2]);
         
       cout << "\nDuracao guloso: " << duracaoGuloso.count() << " microssegundos" << endl;
 
