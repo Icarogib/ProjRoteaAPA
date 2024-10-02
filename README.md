@@ -82,6 +82,12 @@ Planejamento:
 - Makefile!
 <br>
 
+Observações após o término:
+
+- O projeto foi feito em conjunto, e não foi satisfatório pois foi recebidas informações que não condizem com o que era requisitado pelo professor.
+  Logo, a implementação não ficou condizente com o que foi pedido, e houveram "gambiarras" quando chegava informações de última hora.
+  Foi um projeto em conjunto, e nem tudo condiz com a minha habilidade atual.
+
 
 
 obs:
